@@ -19,24 +19,25 @@ import { NotificationManager } from 'zlux-base/notification-manager/notification
 import { SimpleGlobalization } from '../i18n/simple-globalization'
 // import { VirtualDesktopAdapter } from '../abstract-virtual-desktop/virtual-desktop-adapter'
 
-declare var window: { ZoweZLUX: typeof ZoweZLUXResources,
+declare var window: { ZoweZLUX: ZoweZLUXResources,
                       COM_RS_COMMON_LOGGER: Logger};
 window; /* Suppress TS error */
 let logger = new Logger();
 logger.addDestination(logger.makeDefaultDestination(true,true,true));
 window.COM_RS_COMMON_LOGGER = logger;
 
-export class ZoweZLUXResources {
-  static pluginManager = PluginManager
-  static uriBroker:ZLUX.UriBroker = new MvdUri();
-  static dispatcher:Dispatcher = new Dispatcher(logger);
-  static logger:Logger = logger;
-  static registry:ZLUX.Registry = new Registry();
-  static notificationManager:NotificationManager = new NotificationManager();
-  // currently replaced in plugin-manager.module
-  static globalization: ZLUX.Globalization = new SimpleGlobalization();
+export function getZoweResources(environmentInfo:ZLUX.EnvironmentInfo) {
+  return {
+    pluginManager : PluginManager,
+    dispatcher : new Dispatcher(logger),
+    logger : logger,
+    registry : new Registry(),
+    notificationManager : new NotificationManager(),
+    // currently replaced in plugin-manager.module
+    globalization : new SimpleGlobalization(),
+    uriBroker : new MvdUri(environmentInfo)
+  }
 }
-
 
 /*
   This program and the accompanying materials are

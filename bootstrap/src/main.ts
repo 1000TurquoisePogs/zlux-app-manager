@@ -31,18 +31,22 @@ if (typeof query.pluginId === 'string') {
   (window as any)['GIZA_ENVIRONMENT'] = 'MVD';
 }
 
-try {
-  const simpleContainerRequested = (window as any)['GIZA_SIMPLE_CONTAINER_REQUESTED'];
-  const uriBroker = (window as any)['GIZA_ENVIRONMENT'];
+fetch(new Request('/server/os'), {method: 'GET'}).then(function(response){return response.json();}).then(function(osInfo) {
+  try {
+    let environmentInfo = {
+      os: osInfo
+    };
+    const simpleContainerRequested = (window as any)['GIZA_SIMPLE_CONTAINER_REQUESTED'];
+    const uriBroker = (window as any)['GIZA_ENVIRONMENT'];
 
-  if (!simpleContainerRequested || uriBroker.toUpperCase() === 'MVD') {
-    BootstrapManager.bootstrapDesktopAndInject();
+    if (!simpleContainerRequested || uriBroker.toUpperCase() === 'MVD') {
+      BootstrapManager.bootstrapDesktopAndInject(environmentInfo);
+    }
+  } catch (error) {
+    console.error("Unable to bootstrap desktop!!");
+    console.error(error);
   }
-} catch (error) {
-  console.error("Unable to bootstrap desktop!!");
-  console.error(error);
-}
-
+});
 
 /*
   This program and the accompanying materials are

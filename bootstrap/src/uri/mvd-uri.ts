@@ -16,6 +16,10 @@ const proxy_path = 'zowe-zlux';
 const proxy_mode = (window.location.pathname.split('/')[1] == proxy_path) ? true : false;
 
 export class MvdUri implements ZLUX.UriBroker {
+  constructor(private readonly environmentInfo: ZLUX.EnvironmentInfo) {
+    console.log('env os info=',this.environmentInfo.os);
+  }
+  
   rasUri(uri: string): string {
     return `${this.serverRootUri(`ras/${uri}`)}`;
   }

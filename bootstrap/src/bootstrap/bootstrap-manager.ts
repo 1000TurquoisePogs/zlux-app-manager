@@ -12,23 +12,23 @@
 
 import { Plugin } from 'zlux-base/plugin-manager/plugin'
 import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
-import { ZoweZLUXResources } from './rocket-mvd-resources'
-import { DSMResources } from './dsm-resources'
+import { getZoweResources } from './rocket-mvd-resources'
+import { getDSMResources } from './dsm-resources'
 
 
-declare var window: { ZoweZLUX: typeof ZoweZLUXResources };
+declare var window: { ZoweZLUX: ZoweZLUXResources };
 
 export class BootstrapManager {
   private static bootstrapPerformed = false;
 
-  private static bootstrapGlobalResources(simpleContainerRequested: boolean) {
+  private static bootstrapGlobalResources(environmentInfo: ZLUX.EnvironmentInfo, simpleContainerRequested: boolean) {
     const uriBroker = (window as any)['GIZA_ENVIRONMENT'];
     console.log("bootstrapGlobalResources simpleContainerRequested flag value: ", simpleContainerRequested);
     console.log("bootstrapGlobalResources GIZA_ENVIRONMENT value: ", uriBroker);
     if (simpleContainerRequested && uriBroker.toUpperCase() === 'DSM') {
-      window.ZoweZLUX = DSMResources;
+      window.ZoweZLUX = getDSMResources(environmentInfo);
     } else {
-      window.ZoweZLUX = ZoweZLUXResources;
+      window.ZoweZLUX = getZoweResources(environmentInfo);
     }
   }
 
@@ -49,16 +49,16 @@ export class BootstrapManager {
     });
   }
 
-  static bootstrapDesktopAndInject() {
-    BootstrapManager.bootstrapDesktop((plugin) => {
+  static bootstrapDesktopAndInject(environmentInfo:ZLUX.EnvironmentInfo) {
+    BootstrapManager.bootstrapDesktop(environmentInfo, (plugin) => {
       return PluginManager.includeScript(window.ZoweZLUX.uriBroker.pluginResourceUri(plugin, "main.js"));
     });
   }
 
-  static bootstrapDesktop(injectionCallback: (plugin: ZLUX.Plugin) => Promise<void>) {
+  static bootstrapDesktop(environmentInfo: ZLUX.EnvironmentInfo, injectionCallback: (plugin: ZLUX.Plugin) => Promise<void>) {
     const simpleContainerRequested = (window as any)['GIZA_SIMPLE_CONTAINER_REQUESTED'];
 
-    BootstrapManager.bootstrapGlobalResources(simpleContainerRequested);
+    BootstrapManager.bootstrapGlobalResources(environmentInfo, simpleContainerRequested);
 
     PluginManager.loadPlugins(ZLUX.PluginType.Desktop).then(desktops => {
       console.log(`${desktops.length} desktops available`);
