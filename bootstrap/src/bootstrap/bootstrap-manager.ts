@@ -57,7 +57,7 @@ export class BootstrapManager {
 
   static bootstrapDesktop(environmentInfo: ZLUX.EnvironmentInfo, injectionCallback: (plugin: ZLUX.Plugin) => Promise<void>) {
     const simpleContainerRequested = (window as any)['GIZA_SIMPLE_CONTAINER_REQUESTED'];
-
+    console.log('Bootstrapping Zowe for running on platform=', environmentInfo.os);
     BootstrapManager.bootstrapGlobalResources(environmentInfo, simpleContainerRequested);
 
     PluginManager.loadPlugins(ZLUX.PluginType.Desktop).then(desktops => {
