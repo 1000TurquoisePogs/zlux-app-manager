@@ -40,8 +40,9 @@ export class InjectionManager {
 
     let logger:ZLUX.ComponentLogger|undefined = ComponentLoggerContainer.get(identifier);
     if (!logger) {
-      logger = ZoweZLUX.logger.makeComponentLogger(identifier);
-      ComponentLoggerContainer.set(identifier,logger);
+      let newLogger = ZoweZLUX.logger.makeComponentLogger(identifier);
+      logger = newLogger; //typescript actually refused to compile due to it thinking logger still  had a chance of being undefined which is insane
+      ComponentLoggerContainer.set(identifier,newLogger);
     }
     const l10nPluginConfig: Angular2L10nConfig = {
       defaultLocale: this.l10nConfigService.getDefaultLocale(),
