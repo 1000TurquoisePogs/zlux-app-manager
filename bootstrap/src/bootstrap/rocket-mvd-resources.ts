@@ -36,7 +36,7 @@ export function getZoweResources(environmentInfo:ZLUX.EnvironmentInfo) {
     notificationManager : new NotificationManager(),
     // currently replaced in plugin-manager.module
     globalization : new SimpleGlobalization(),
-    uriBroker : new MvdUri()
+    uriBroker : new MvdUri(logger)
   }
 }
 

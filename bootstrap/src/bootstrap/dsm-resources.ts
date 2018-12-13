@@ -34,7 +34,7 @@ export function getDSMResources(environmentInfo:ZLUX.EnvironmentInfo){
     notificationManager : new NotificationManager(),
     // currently replaced in plugin-manager.module
     globalization : new SimpleGlobalization(),
-    uriBroker : new DsmUri()
+    uriBroker : new DsmUri(logger)
   }
 }
 

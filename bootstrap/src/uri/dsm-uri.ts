@@ -15,9 +15,11 @@ import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
 const proxy_path = 'zowe-zlux';
 const proxy_mode = (window.location.pathname.split('/')[1] == proxy_path) ? true : false;
 
-const log = ZoweZLUX.logger.makeComponentLogger('ZLUX.UriBroker');
-
 export class DsmUri implements ZLUX.UriBroker {
+  private readonly log: ZLUX.ComponentLogger;
+  constructor(logger: ZLUX.Logger) {
+    this.log = logger.makeComponentLogger('ZLUX.UriBroker'); 
+  }  
   private proxyURL(url: string): string {
     return proxy_mode ? `/${proxy_path}${url}` : url;
   }
@@ -33,7 +35,7 @@ export class DsmUri implements ZLUX.UriBroker {
   datasetContentsUri(relativePath: string): string {
     relativePath;//suppress warning for now
     if (!ZoweZLUX.environmentManager.isHostZOS()) {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
     }    
     return "";
   }
@@ -41,7 +43,7 @@ export class DsmUri implements ZLUX.UriBroker {
     relativePath;//suppress warning for now
     closeAfter;
     if (!ZoweZLUX.environmentManager.isHostZOS()) {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
     }
     return "";
   }
@@ -52,7 +54,7 @@ export class DsmUri implements ZLUX.UriBroker {
     resumeName;
     resumeCatalogName;
     if (!ZoweZLUX.environmentManager.isHostZOS()) {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
     }    
     return "";
   }
@@ -67,7 +69,7 @@ export class DsmUri implements ZLUX.UriBroker {
     resumeName;
     resumeCatalogName;
     if (!ZoweZLUX.environmentManager.isHostZOS()) {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
     }    
     return "";
   }

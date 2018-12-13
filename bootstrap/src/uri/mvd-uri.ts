@@ -15,9 +15,11 @@ import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
 const proxy_path = 'zowe-zlux';
 const proxy_mode = (window.location.pathname.split('/')[1] == proxy_path) ? true : false;
 
-const log = ZoweZLUX.logger.makeComponentLogger('ZLUX.UriBroker');
-
-export class MvdUri implements ZLUX.UriBroker { 
+export class MvdUri implements ZLUX.UriBroker {
+  private readonly log: ZLUX.ComponentLogger;
+  constructor(logger: ZLUX.Logger) {
+    this.log = logger.makeComponentLogger('ZLUX.UriBroker'); 
+  }
   rasUri(uri: string): string {
     return `${this.serverRootUri(`ras/${uri}`)}`;
   }
@@ -42,7 +44,7 @@ export class MvdUri implements ZLUX.UriBroker {
     if (ZoweZLUX.environmentManager.isHostZOS()) {
       return `${this.serverRootUri(`datasetContents/${dsn}`)}`;
     } else {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
       return '';
     }    
   }
@@ -51,7 +53,7 @@ export class MvdUri implements ZLUX.UriBroker {
       let closeAfterParam = closeAfter ? '?closeAfter=' + closeAfter : '';
       return `${this.serverRootUri(`VSAMdatasetContents/${dsn}${closeAfterParam}`)}`;
     } else {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
       return '';
     }
   }
@@ -67,7 +69,7 @@ export class MvdUri implements ZLUX.UriBroker {
       let params = this.createParamURL(paramArray);      
       return `${this.serverRootUri(`datasetMetadata/hlq${params}`)}`;
     } else {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
       return '';
     }
   }
@@ -87,9 +89,9 @@ export class MvdUri implements ZLUX.UriBroker {
 
       let paramArray = [detailParam, typesParam, workAreaSizeParam, listMembersParam, includeMigratedParam, includeUnprintableParam, resumeNameParam, resumeCatalogNameParam];
       let params = this.createParamURL(paramArray);
-      return `${this.serverRootUri(`datasetMetadata/${dsn}${params}`)}`;
+      return `${this.serverRootUri(`datasetMetadata/name/${dsn}${params}`)}`;
     } else {
-      log.severe(`This Zowe backend OS does not support datasets`);
+      this.log.severe(`This Zowe backend OS does not support datasets`);
       return '';
     }
   }
