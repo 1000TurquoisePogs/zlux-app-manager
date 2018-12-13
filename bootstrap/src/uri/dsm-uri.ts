@@ -15,6 +15,8 @@ import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
 const proxy_path = 'zowe-zlux';
 const proxy_mode = (window.location.pathname.split('/')[1] == proxy_path) ? true : false;
 
+const log = ZoweZLUX.logger.makeComponentLogger('ZLUX.UriBroker');
+
 export class DsmUri implements ZLUX.UriBroker {
   private proxyURL(url: string): string {
     return proxy_mode ? `/${proxy_path}${url}` : url;
@@ -30,11 +32,17 @@ export class DsmUri implements ZLUX.UriBroker {
   }
   datasetContentsUri(relativePath: string): string {
     relativePath;//suppress warning for now
+    if (!ZoweZLUX.environmentManager.isHostZOS()) {
+      log.severe(`This Zowe backend OS does not support datasets`);
+    }    
     return "";
   }
   VSAMdatasetContentsUri(relativePath: string, closeAfter?: boolean): string {
     relativePath;//suppress warning for now
     closeAfter;
+    if (!ZoweZLUX.environmentManager.isHostZOS()) {
+      log.severe(`This Zowe backend OS does not support datasets`);
+    }
     return "";
   }
   datasetMetadataHlqUri(updateCache?: boolean | undefined, types?: string | undefined, workAreaSize?: number | undefined, resumeName?: string | undefined, resumeCatalogName?: string | undefined): string {
@@ -43,6 +51,9 @@ export class DsmUri implements ZLUX.UriBroker {
     workAreaSize;
     resumeName;
     resumeCatalogName;
+    if (!ZoweZLUX.environmentManager.isHostZOS()) {
+      log.severe(`This Zowe backend OS does not support datasets`);
+    }    
     return "";
   }
   datasetMetadataUri(relativePath: string, detail?: string | undefined, types?: string | undefined, listMembers?: boolean | undefined, workAreaSize?: number | undefined, includeMigrated?: boolean | undefined, includeUnprintable?: boolean | undefined, resumeName?: string | undefined, resumeCatalogName?: string | undefined): string {
@@ -55,6 +66,9 @@ export class DsmUri implements ZLUX.UriBroker {
     includeUnprintable;
     resumeName;
     resumeCatalogName;
+    if (!ZoweZLUX.environmentManager.isHostZOS()) {
+      log.severe(`This Zowe backend OS does not support datasets`);
+    }    
     return "";
   }
 

@@ -15,6 +15,8 @@ import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
 const proxy_path = 'zowe-zlux';
 const proxy_mode = (window.location.pathname.split('/')[1] == proxy_path) ? true : false;
 
+const log = ZoweZLUX.logger.makeComponentLogger('ZLUX.UriBroker');
+
 export class MvdUri implements ZLUX.UriBroker { 
   rasUri(uri: string): string {
     return `${this.serverRootUri(`ras/${uri}`)}`;
@@ -30,41 +32,66 @@ export class MvdUri implements ZLUX.UriBroker {
     
     let paramArray = [sourceEncodingParam, targetEncodingParam, newNameParam, forceOverwriteParam];
     let params = this.createParamURL(paramArray);
-    
-    return `${this.serverRootUri(`unixfile/${routeParam}/${absPathParam}${params}`)}`;
+    if (ZoweZLUX.environmentManager.isHostI()) {
+      return `${this.serverRootUri(`unixFileContents/${absPathParam}${params}`)}`;
+    } else {
+      return `${this.serverRootUri(`unixfile/${routeParam}/${absPathParam}${params}`)}`;
+    }
   }
   datasetContentsUri(dsn: string): string {
-    return `${this.serverRootUri(`datasetContents/${dsn}`)}`;
+    if (ZoweZLUX.environmentManager.isHostZOS()) {
+      return `${this.serverRootUri(`datasetContents/${dsn}`)}`;
+    } else {
+      log.severe(`This Zowe backend OS does not support datasets`);
+      return '';
+    }    
   }
   VSAMdatasetContentsUri(dsn: string, closeAfter?: boolean): string {
-    let closeAfterParam = closeAfter ? '?closeAfter=' + closeAfter : '';
-    return `${this.serverRootUri(`VSAMdatasetContents/${dsn}${closeAfterParam}`)}`;
+    if (ZoweZLUX.environmentManager.isHostZOS()) {
+      let closeAfterParam = closeAfter ? '?closeAfter=' + closeAfter : '';
+      return `${this.serverRootUri(`VSAMdatasetContents/${dsn}${closeAfterParam}`)}`;
+    } else {
+      log.severe(`This Zowe backend OS does not support datasets`);
+      return '';
+    }
   }
   datasetMetadataHlqUri(updateCache?: boolean | undefined, types?: string | undefined, workAreaSize?: number | undefined, resumeName?: string | undefined, resumeCatalogName?: string | undefined): string {
-    let updateCacheParam = updateCache ? 'updateCache=' + updateCache : '';
-    let typesParam = types ? 'types=' + types : '';
-    let workAreaSizeParam = workAreaSize ? 'workAreaSize=' + workAreaSize : '';
-    let resumeNamesParam = resumeName ? 'resumeName=' + resumeName : '';
-    let resumeCatalogNameParam = resumeCatalogName ? 'resumeCatalogName=' + resumeCatalogName : '';
+    if (ZoweZLUX.environmentManager.isHostZOS()) {
+      let updateCacheParam = updateCache ? 'updateCache=' + updateCache : '';
+      let typesParam = types ? 'types=' + types : '';
+      let workAreaSizeParam = workAreaSize ? 'workAreaSize=' + workAreaSize : '';
+      let resumeNamesParam = resumeName ? 'resumeName=' + resumeName : '';
+      let resumeCatalogNameParam = resumeCatalogName ? 'resumeCatalogName=' + resumeCatalogName : '';
 
-    let paramArray = [updateCacheParam, typesParam, workAreaSizeParam, resumeNamesParam, resumeCatalogNameParam];
-    let params = this.createParamURL(paramArray);
-
-    return `${this.serverRootUri(`datasetMetadata/hlq${params}`)}`;
+      let paramArray = [updateCacheParam, typesParam, workAreaSizeParam, resumeNamesParam, resumeCatalogNameParam];
+      let params = this.createParamURL(paramArray);      
+      return `${this.serverRootUri(`datasetMetadata/hlq${params}`)}`;
+    } else {
+      log.severe(`This Zowe backend OS does not support datasets`);
+      return '';
+    }
   }
-  datasetMetadataUri(dsn: string, detail?: string | undefined, types?: string | undefined, listMembers?: boolean | undefined, workAreaSize?: number | undefined, includeMigrated?: boolean | undefined, includeUnprintable?: boolean | undefined, resumeName?: string | undefined, resumeCatalogName?: string | undefined): string {
-    let detailParam = detail ? 'detail=' + detail : '';
-    let typesParam = types ? 'types=' + types : '';
-    let workAreaSizeParam = workAreaSize ? 'workAreaSize=' + workAreaSize : '';
-    let listMembersParam = listMembers ? 'listMembers=' + listMembers : '';
-    let includeMigratedParam = includeMigrated ? 'includeMigrated=' + includeMigrated : '';
-    let includeUnprintableParam = includeUnprintable ? 'includeUnprintable=' + includeUnprintable : '';
-    let resumeNameParam = resumeName ? 'resumeName=' + resumeName : '';
-    let resumeCatalogNameParam = resumeCatalogName ? 'resumeCatalogName=' + resumeCatalogName : '';
+  datasetMetadataUri(dsn: string, detail?: string | undefined, types?: string | undefined,
+                     listMembers?: boolean | undefined, workAreaSize?: number | undefined,
+                     includeMigrated?: boolean | undefined, includeUnprintable?: boolean | undefined,
+                     resumeName?: string | undefined, resumeCatalogName?: string | undefined): string {
+    if (ZoweZLUX.environmentManager.isHostZOS()) {
+      let detailParam = detail ? 'detail=' + detail : '';
+      let typesParam = types ? 'types=' + types : '';
+      let workAreaSizeParam = workAreaSize ? 'workAreaSize=' + workAreaSize : '';
+      let listMembersParam = listMembers ? 'listMembers=' + listMembers : '';
+      let includeMigratedParam = includeMigrated ? 'includeMigrated=' + includeMigrated : '';
+      let includeUnprintableParam = includeUnprintable ? 'includeUnprintable=' + includeUnprintable : '';
+      let resumeNameParam = resumeName ? 'resumeName=' + resumeName : '';
+      let resumeCatalogNameParam = resumeCatalogName ? 'resumeCatalogName=' + resumeCatalogName : '';
 
-    let paramArray = [detailParam, typesParam, workAreaSizeParam, listMembersParam, includeMigratedParam, includeUnprintableParam, resumeNameParam, resumeCatalogNameParam];
-    let params = this.createParamURL(paramArray);
-    return `${this.serverRootUri(`datasetMetadata/${dsn}${params}`)}`;
+      let paramArray = [detailParam, typesParam, workAreaSizeParam, listMembersParam, includeMigratedParam, includeUnprintableParam, resumeNameParam, resumeCatalogNameParam];
+      let params = this.createParamURL(paramArray);
+      return `${this.serverRootUri(`datasetMetadata/${dsn}${params}`)}`;
+    } else {
+      log.severe(`This Zowe backend OS does not support datasets`);
+      return '';
+    }
   }
   pluginRootUri(pluginDefinition: ZLUX.Plugin): string {
     return `${this.serverRootUri(`ZLUX/plugins/${pluginDefinition.getIdentifier()}/`)}`;
