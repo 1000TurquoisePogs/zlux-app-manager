@@ -16,6 +16,6 @@ g{
   },
   "homepage": "https://github.com/zowe/zlux-app-manager#readme",
   "dependencies": {
-    "zlux-platform": "git+ssh://git@github.com:1000TurqoisePogs/zlux-platform.git#feature\/test-npm-deps"
+    "zlux-platform": "git+ssh://git@github.com:1000TurquoisePogs/zlux-platform.git#feature\/test-npm-deps"
   }  
 }
