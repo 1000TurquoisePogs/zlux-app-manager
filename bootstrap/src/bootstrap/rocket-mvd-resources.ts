@@ -17,6 +17,7 @@ import { Logger } from '../../../../zlux-shared/src/logging/logger'
 import { Registry } from 'zlux-base/registry/registry'
 import { NotificationManager } from 'zlux-base/notification-manager/notification-manager'
 import { SimpleGlobalization } from '../i18n/simple-globalization'
+import { SearchManager} from 'zlux-base/search-manager/search-manager'
 // import { VirtualDesktopAdapter } from '../abstract-virtual-desktop/virtual-desktop-adapter'
 
 declare var window: { ZoweZLUX: typeof ZoweZLUXResources,
@@ -33,6 +34,7 @@ export class ZoweZLUXResources {
   static logger:Logger = logger;
   static registry:ZLUX.Registry = new Registry();
   static notificationManager:NotificationManager = new NotificationManager();
+  static searchManager:SearchManager = new SearchManager();
   // currently replaced in plugin-manager.module
   static globalization: ZLUX.Globalization = new SimpleGlobalization();
 }

@@ -1,0 +1,171 @@
+<div class="search-container">
+  <div class="bx--row search-row">
+      <div class="bx--col-xs-12 search-section">
+        <button class="inputPopover" (click)="inputPopover()"> <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/spyglass-caret.png"/></button>
+        <input #searchInput
+        placeholder="Type to search"
+        class="search-input"
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="autocomplete()"
+        (keydown.Tab)="getNextEntity($event)"
+        (keydown.shift.Tab)="getPreviousEntity($event)"
+        (keydown.enter)="search()"
+        (keydown.arrowDown)="tabDown()"
+        (keydown.arrowUp)="tabUp()"
+        (blur)="removeSuggestions($event)"
+        (keydown.Escape)="removeSuggestions($event)"
+        (focus)="addSuggestions()"
+        (click)="addSuggestions()"
+        name="value">
+      </div>
+    <div class="search-button">
+      <button class="bx--btn bx--btn--primary search-button" type="button" (click)="search()">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="displayPopover">
+    <div class="arrowDown">
+    </div>
+    <div class="popoverMenu">
+      <div class="popOverExp">
+        Click on required option or enter operator in the Search box to define area of interest.
+      </div>
+      <div class="popoverRows">
+        <button type="button" (click)="ibmSearch()">
+          IBM knowledge center
+        </button>
+        <span>or ibmknow:&lt;filename&gt; keyword</span>
+      </div>
+      <div class="popoverRows">
+        <button type="button" (click)="appSearch()">
+          My Applications
+        </button>
+        <span>or myapp:&lt;application&gt; keyword</span>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="loading-spinner-container">
+    <loading-spinner [options]="{}" *ngIf="loadingQuery"> </loading-spinner>
+  </div> -->
+  <div class="tab-slider--nav"  *ngIf="tempWebSearchResults.entities && tempWebSearchResults.entities.length > 0 || tempAppSearchResults.entities && tempAppSearchResults.entities.length > 0">
+      <ul class="tab-slider--tabs" >
+        <li *ngIf="!regexActive" class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'">All</li>
+        <li *ngIf="tempWebSearchResults.entities && tempWebSearchResults.entities.length > 0" class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'">IBM knowledge base</li>
+        <li *ngIf="tempAppSearchResults.entities && tempAppSearchResults.entities.length > 0" class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'">Applications</li>
+      </ul>
+    </div>
+    <div class="tab-slider--container" [ngSwitch]="viewMode">
+      <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
+        <div class="search-result">
+          <div *ngIf="displaySuggestions">
+            <div class="marquee" *ngIf="tempWebSearchResults.entities && tempWebSearchResults.entities.length > 0">
+              IBM KNOWLEDGE BASE ARTICLES
+            </div>
+            <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entities.length > 0">
+              <li class="url-list" *ngFor="let webRes of tempWebSearchResults.entities" (keydown.enter)="launchApp(app)">
+                <div class="book">
+                  <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
+                </div>
+                <div>
+                  <div class="url-href">
+                    <a href={{webRes.href}} target="_blank">{{webRes.name}}</a>
+                  </div>
+                  <div>
+                    {{webRes.summary}}
+                  </div>
+                </div>
+            </li>
+          </ul>
+          <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entities.length < 1">
+            <li class="url-list">
+              <span>
+                No results found
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="displaySuggestions">
+          <div class="marquee" *ngIf="displaySuggestions">
+            APPLICATIONS SEARCH
+          </div>
+          <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entities.length > 0">
+            <li class="app-list" *ngFor="let app of tempAppSearchResults.entities" (keydown.enter)="launchApp(app)">
+                <span class="toolbox">
+                  <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
+                </span>
+                <span (click)="launchApp(app)">
+                  {{app.name}}
+                </span>
+            </li>
+          </ul>
+          <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entities.length < 1">
+            <li class="app-list" >
+                <span >
+                  No results found
+                </span>
+            </li>
+          </ul>
+        </div>
+        </div>
+      </div>
+      <div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
+        <div class="search-result">
+          <div *ngIf="displaySuggestions" >
+            <div class="marquee" *ngIf="tempWebSearchResults.entities && tempWebSearchResults.entities.length > 0">
+              IBM KNOWLEDGE BASE ARTICLES
+            </div>
+            <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entities.length > 0">
+              <li class="url-list" *ngFor="let webRes of tempWebSearchResults.entities" (keydown.enter)="launchApp(app)">
+                <div class="book">
+                  <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
+                </div>
+                <div>
+                  <div class="url-href">
+                    <a href={{webRes.href}} target="_blank">{{webRes.name}}</a>
+                  </div>
+                  <div>
+                    {{webRes.summary}}
+                  </div>
+                </div>
+            </li>
+          </ul>
+          <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entities.length < 1">
+            <li class="url-list">
+              <span>
+                No results found
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      </div>
+      <div id="tab3" class="tab-slider--body" *ngSwitchCase="'tab3'">
+        <div class="search-result">
+          <div *ngIf="displaySuggestions">
+            <div class="marquee" *ngIf="tempAppSearchResults.entities.length > 0">
+              APPLICATIONS SEARCH
+            </div>
+            <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entities.length > 0">
+              <li class="app-list" *ngFor="let app of tempAppSearchResults.entities" (keydown.enter)="launchApp(app)">
+                  <span class="toolbox">
+                    <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
+                  </span>
+                  <span (click)="launchApp(app)">
+                    {{app.name}}
+                  </span>
+              </li>
+            </ul>
+            <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entities.length < 1">
+              <li class="app-list" >
+                  <span >
+                    No results found
+                  </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

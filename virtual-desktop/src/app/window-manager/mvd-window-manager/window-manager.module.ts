@@ -26,6 +26,8 @@ import { DraggableDirective } from './shared/draggable.directive';
 import { SizeableDirective } from './shared/sizeable.directive';
 import { MvdComponent } from './mvd.component';
 import { AuthenticationModule } from '../../authentication-manager/authentication-manager.module';
+import {SearchService} from './services/search.service';
+import { LaunchAppService } from './services/launch-app.service'
 
 @NgModule({
   imports: [
@@ -49,6 +51,8 @@ import { AuthenticationModule } from '../../authentication-manager/authenticatio
   ],
   providers: [
     WindowManagerService,
+    SearchService,
+    LaunchAppService,
     /* Expose to the rest of the desktop */
     { provide: MVDWindowManagement.Tokens.WindowManagerToken, useExisting: WindowManagerService }
   ]
@@ -67,4 +71,3 @@ export class WindowManagerModule {
 
   Copyright Contributors to the Zowe Project.
 */
-
