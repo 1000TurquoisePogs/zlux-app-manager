@@ -1,4 +1,4 @@
-import { SearchService } from '../../services/search.service';
+// import { SearchService } from '../../services/search.service';
 // import { AutocompleteService } from '../services/autocomplete.service.ts';
 import { LaunchAppService } from '../../services/launch-app.service';
 import { Component, OnInit, ViewChild, ViewChildren, Renderer2, ElementRef } from '@angular/core';
@@ -40,11 +40,13 @@ export class SearchComponent implements OnInit {
   public viewMode:string = 'tab1';
   public displayPopover:boolean = false;
   public regexActive:boolean = false;
+  public zoweWindow: any = window.parent;
+
 
 
   constructor(
     private _eref: ElementRef,
-    private searchService: SearchService,
+    // private searchService: SearchService,
     // private autocompleteService: AutocompleteService,
     private launchAppService: LaunchAppService,
     private renderer: Renderer2,
@@ -121,33 +123,91 @@ export class SearchComponent implements OnInit {
 
     this.loadingQuery = true;
     this.currentTab = undefined;
-    if (this.searchSelector("myapp")){
-      const stripQuery:string = this.stripRegex();
-      this.searchService
-      .executeAppQuery(stripQuery)
-      .subscribe((result:SearchResult) => {
-        this.loadingQuery = false;
-        this.displaySuggestions = true;
-        this.tempAppSearchResults = result;
-      }, (err:any) => {
-          console.log(err);
-          this.loadingQuery = false;
-        });
+    const stripQuery:string = this.stripRegex();
+    let searchCapabilities:string[] = [];
+    this.searchSelector("myapp") ? searchCapabilities.push("app"): null;
+    this.searchSelector("ibmknow") ? searchCapabilities.push("ibm knowledge center"): null;
+    const searchManager = this.zoweWindow.ZoweZLUX.searchManager;
+    searchManager.conductSearches(stripQuery, searchCapabilities)
+    .then((results:SearchResult[])=> {
+      this.loadingQuery = false;
+      this.displaySuggestions = true;
+      for(const result of results){
+        if (result.type === "app"){
+          this.tempAppSearchResults = result;
+        }
+        else if (result.type === "ibm knowledge center"){
+          this.tempWebSearchResults = result;
+        }
       }
-      if (this.searchSelector("ibmknow")){
-        const stripQuery:string = this.stripRegex();
-      this.searchService
-      .executeWebQuery(stripQuery)
-      .subscribe((result:SearchResult) => {
+    }, (err:any) => {
+        console.log(err);
         this.loadingQuery = false;
-        this.displaySuggestions = true;
-        this.tempWebSearchResults = result;
-      }, (err:any) => {
-          console.log(err);
-          this.loadingQuery = false;
-      });
-     }
+    });
+    // if (this.searchSelector("myapp")){
+    //   this.searchService
+    //   .executeAppQuery(stripQuery)
+    //   .subscribe((result:SearchResult) => {
+    //   // const searchManager = this.zoweWindow.ZoweZLUX.searchManager;
+    //   // searchManager.conductSearches(stripQuery)
+    //   // .then((result:SearchResult)=> {
+    //     this.loadingQuery = false;
+    //     this.displaySuggestions = true;
+    //     this.tempAppSearchResults = result;
+    //   }, (err) => {
+    //       console.log(err);
+    //       this.loadingQuery = false;
+    //     });
+    //   }
+     //  if (this.searchSelector("ibmknow")){
+     //    const searchManager = this.zoweWindow.ZoweZLUX.searchManager;
+     //    searchManager.conductSearches(stripQuery)
+     //    .then((result:SearchResult)=> {
+     //      this.loadingQuery = false;
+     //      this.displaySuggestions = true;
+     //      this.tempWebSearchResults = result[0];
+     //    }, (err) => {
+     //        console.log(err);
+     //        this.loadingQuery = false;
+     //    });
+     // }
   }
+  // public search(): void {
+  //   this.displayPopover = false;
+  //   this.displaySuggestions = false;
+  //   this.checkRegexActive();
+  //   this.tempAppSearchResults = new SearchResult();
+  //   this.tempWebSearchResults = new SearchResult();
+  //
+  //   this.loadingQuery = true;
+  //   this.currentTab = undefined;
+  //   if (this.searchSelector("myapp")){
+  //     const stripQuery:string = this.stripRegex();
+  //     this.searchService
+  //     .executeAppQuery(stripQuery)
+  //     .subscribe((result:SearchResult) => {
+  //       this.loadingQuery = false;
+  //       this.displaySuggestions = true;
+  //       this.tempAppSearchResults = result;
+  //     }, (err:any) => {
+  //         console.log(err);
+  //         this.loadingQuery = false;
+  //       });
+  //     }
+  //     if (this.searchSelector("ibmknow")){
+  //       const stripQuery:string = this.stripRegex();
+  //     this.searchService
+  //     .executeWebQuery(stripQuery)
+  //     .subscribe((result:SearchResult) => {
+  //       this.loadingQuery = false;
+  //       this.displaySuggestions = true;
+  //       this.tempWebSearchResults = result;
+  //     }, (err:any) => {
+  //         console.log(err);
+  //         this.loadingQuery = false;
+  //     });
+  //    }
+  // }
 
   public removeSuggestions(event: any): void {
     // if (event.explicitOriginalTarget.classList &&

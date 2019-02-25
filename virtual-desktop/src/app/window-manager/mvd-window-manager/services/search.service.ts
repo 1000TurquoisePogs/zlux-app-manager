@@ -82,7 +82,7 @@ export class SearchService {
       //   this.results.emit(new SearchResult().deserialize(res.json()));
       // }
 
-      return new SearchResult().deserialize(this.processResults(res.json(), query), query);
+      return new SearchResult().deserialize(this.processResults(res.json(), query), query, "stub");
     }).catch((err) => {
       return this.errorHandler(err);
     });
@@ -160,7 +160,7 @@ export class SearchService {
       //   this.results.emit(new SearchResult().deserialize(res.json()));
       // }
 
-      return new SearchResult().deserialize(this.processWebResults(res.json(), query), query);
+      return new SearchResult().deserialize(this.processWebResults(res.json(), query), query, "stub");
     }).catch((err) => {
       return this.errorHandler(err);
     });
@@ -170,8 +170,8 @@ export class SearchService {
     const body = query.serialize();
     const config = {params: {text: this.searchTerm, username: 'PDJOH2'}};
     return this.http.post(this.leibnizUrl + 'disambiguate', body, config).map((res) => {
-      this.results.emit(new SearchResult().deserialize(res.json(), ""));
-      return new SearchResult().deserialize(res.json(), "");
+      this.results.emit(new SearchResult().deserialize(res.json(), "", "stub"));
+      return new SearchResult().deserialize(res.json(), "", "stub");
     }).catch((err) => {
       return this.errorHandler(err);
     });
