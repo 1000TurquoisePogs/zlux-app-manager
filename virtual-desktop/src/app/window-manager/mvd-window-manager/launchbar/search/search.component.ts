@@ -66,6 +66,7 @@ export class SearchComponent implements OnInit {
     this.inputElement = this.searchInput.nativeElement;
   }
   public inputPopover():void{
+    console.log("inputPopover")
     this.displayPopover=!this.displayPopover;
   }
   public ibmSearch():void{
@@ -123,7 +124,7 @@ export class SearchComponent implements OnInit {
 
     this.loadingQuery = true;
     this.currentTab = undefined;
-    const stripQuery:string = this.stripRegex();
+    const stripQuery:string = "search="+ encodeURI(this.stripRegex());
     let searchCapabilities:string[] = [];
     this.searchSelector("myapp") ? searchCapabilities.push("app"): null;
     this.searchSelector("ibmknow") ? searchCapabilities.push("ibm knowledge center"): null;
@@ -223,6 +224,7 @@ export class SearchComponent implements OnInit {
   }
 
   public addSuggestionToInput(event: any): void {
+    console.log("addSuggestionToInput")
     this.inputElement.focus();
     this.displaySuggestions = false;
     this.currentTab = undefined;
@@ -238,10 +240,13 @@ export class SearchComponent implements OnInit {
   }
 
   public addSuggestions(event: any): void {
+    console.log("addSuggestions")
       this.displaySuggestions = true;
   }
 
   public autocomplete(): void {
+    console.log("autocomplete")
+
    //  this.entitySuggestionList = [];
    //  this.originalSearchTerm = this.inputElement.value;
    //  this.entityIndex = -1;
