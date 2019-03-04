@@ -78,7 +78,6 @@ export class LaunchbarSpotlightComponent {
   }
 
   activeToggle(): void {
-    console.log('clicked activeToggle')
     this.isActive = !this.isActive;
     this.emitState();
   }

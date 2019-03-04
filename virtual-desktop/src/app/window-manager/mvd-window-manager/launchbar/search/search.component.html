@@ -6,8 +6,8 @@
         placeholder="Type to search"
         class="search-input"
         type="text"
+        autocomplete="off"
         [(ngModel)]="searchTerm"
-        (ngModelChange)="autocomplete()"
         (keydown.Tab)="getNextEntity($event)"
         (keydown.shift.Tab)="getPreviousEntity($event)"
         (keydown.enter)="search()"
@@ -15,8 +15,6 @@
         (keydown.arrowUp)="tabUp()"
         (blur)="removeSuggestions($event)"
         (keydown.Escape)="removeSuggestions($event)"
-        (focus)="addSuggestions()"
-        (click)="addSuggestions()"
         name="value">
       </div>
     <div class="search-button">
@@ -87,7 +85,7 @@
           </ul>
         </div>
         <div *ngIf="displaySuggestions">
-          <div class="marquee" *ngIf="displaySuggestions">
+          <div class="marquee" *ngIf="tempAppSearchResults.entities && tempAppSearchResults.entities.length > 0">
             APPLICATIONS SEARCH
           </div>
           <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entities.length > 0">

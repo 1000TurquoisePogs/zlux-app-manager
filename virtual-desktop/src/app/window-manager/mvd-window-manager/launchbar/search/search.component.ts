@@ -85,7 +85,7 @@ export class SearchComponent implements OnInit {
     // TODO: make this regexps driven by config
     const regexps:any = {"myapp":/^myapp:/,"ibmknow":/^ibmknow:/};
     for (const key in regexps){
-      if(inputVal.match(regexps[key])){
+      if(inputVal.startsWith(key)){
         this.regexActive = true;
         break;
       }
@@ -93,13 +93,16 @@ export class SearchComponent implements OnInit {
   }
 
   public searchSelector(regexKey:string): boolean{
-    let status:boolean = true;
+    let status:boolean = false;
     const inputVal:string = this.inputElement.value.toLowerCase();
     // TODO: make this regexps driven by config
     const regexps:any = {"myapp":/^myapp:/,"ibmknow":/^ibmknow:/};
     if (this.regexActive){
-      if (!inputVal.match(regexps[regexKey])){
-        status = false;
+      for (const key in regexps){
+        if(inputVal.startsWith(key)){
+          status = true;
+          break;
+        }
       }
     }
     return status;
@@ -119,6 +122,7 @@ export class SearchComponent implements OnInit {
     this.displayPopover = false;
     this.displaySuggestions = false;
     this.checkRegexActive();
+    this.viewMode = "tab1";
     this.tempAppSearchResults = new SearchResult();
     this.tempWebSearchResults = new SearchResult();
 
@@ -126,18 +130,31 @@ export class SearchComponent implements OnInit {
     this.currentTab = undefined;
     const stripQuery:string = "search="+ encodeURI(this.stripRegex());
     let searchCapabilities:string[] = [];
-    this.searchSelector("myapp") ? searchCapabilities.push("app"): null;
-    this.searchSelector("ibmknow") ? searchCapabilities.push("ibm knowledge center"): null;
+    if (this.inputElement.value.toLowerCase().startsWith("myapp:")){
+        searchCapabilities.push("app");
+        this.viewMode = "tab3";
+    }
+    else if(this.inputElement.value.toLowerCase().startsWith("ibmknow:")){
+      searchCapabilities.push("ibm knowledge center");
+      this.viewMode = "tab2";
+    }
+    else{
+      searchCapabilities.push("app");
+      searchCapabilities.push("ibm knowledge center");
+    }
     const searchManager = this.zoweWindow.ZoweZLUX.searchManager;
     searchManager.conductSearches(stripQuery, searchCapabilities)
     .then((results:SearchResult[])=> {
       this.loadingQuery = false;
       this.displaySuggestions = true;
       for(const result of results){
+        console.log("type detected:" + result.type)
         if (result.type === "app"){
+          console.log("result.type === \"app\"")
           this.tempAppSearchResults = result;
         }
         else if (result.type === "ibm knowledge center"){
+          console.log("result.type === \"ibm knowledge center\"")
           this.tempWebSearchResults = result;
         }
       }

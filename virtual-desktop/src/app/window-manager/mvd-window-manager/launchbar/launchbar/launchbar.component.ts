@@ -47,7 +47,7 @@ export class LaunchbarComponent {
   private applicationManager: MVDHosting.ApplicationManagerInterface;
   private authenticationManager: MVDHosting.AuthenticationManagerInterface;
   propertyWindowPluginDef : DesktopPluginDefinitionImpl;
-  
+
    constructor(
     private pluginsDataService: PluginsDataService,
     private injector: Injector,
@@ -65,12 +65,15 @@ export class LaunchbarComponent {
      this.loggedIn = false;
      this.helperLoggedIn = false; //helperLoggedIn is to indicate when the initial login happens
    }
-  
+
   ngOnInit(): void {
     this.allItems = [];
     this.pluginManager.loadApplicationPluginDefinitions().then(pluginDefinitions => {
       pluginDefinitions.forEach((p)=> {
         if (p.getBasePlugin().getWebContent() != null) {
+          if (p.getIdentifier()==='com.rs.mvd.spotlight'){
+            console.log("hey i'm here")
+          }
           if (p.getIdentifier()==='org.zowe.zlux.appmanager.app.propview'){
             const pluginImpl:DesktopPluginDefinitionImpl = p as DesktopPluginDefinitionImpl;
             this.propertyWindowPluginDef = pluginImpl;
@@ -167,18 +170,18 @@ export class LaunchbarComponent {
     "appType":basePlugin.getType(),
     "copyright":pluginImpl.getCopyright(),
     "image":plugin.image
-    };    
+    };
   }
-  
+
   launchPluginPropertyWindow(plugin: DesktopPluginDefinitionImpl){
     let propertyWindowID = this.windowManager.getWindow(this.propertyWindowPluginDef);
     if (propertyWindowID!=null){
       this.windowManager.showWindow(propertyWindowID);
     } else {
       this.applicationManager.spawnApplication(this.propertyWindowPluginDef,this.getAppPropertyInformation(plugin));
-    }  
+    }
   }
-  
+
   onRightClick(event: MouseEvent, item: LaunchbarItem): boolean {
     var menuItems: ContextMenuItem[];
     if (item.instanceCount == 1) {
@@ -340,4 +343,3 @@ export class LaunchbarComponent {
 
   Copyright Contributors to the Zowe Project.
 */
-
