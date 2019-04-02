@@ -4,9 +4,9 @@
   This program and the accompanying materials are
   made available under the terms of the Eclipse Public License v2.0 which accompanies
   this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
-  
+
   SPDX-License-Identifier: EPL-2.0
-  
+
   Copyright Contributors to the Zowe Project.
 */
 
@@ -18,6 +18,9 @@ import * as html2canvas from 'html2canvas';
 export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.PluginWatcher {
   public instanceIds: Array<MVDHosting.InstanceId>;
   public instanceCount: number;
+  public searchInstanceIds: Array<MVDHosting.InstanceId>;
+  public searchInstanceCount: number;
+
   public windowPreviews: Array<HTMLImageElement>;
   public windowPreviewsIds: Array<number>;
 
@@ -26,12 +29,14 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
     public windowManager: WindowManagerService,
   ) {
     super();
-
     this.instanceIds = [];
+    this.instanceCount = 0;
+    this.searchInstanceIds= [];
+    this.searchInstanceCount = 0;
     this.windowPreviews = [];
     this.windowPreviewsIds = [];
-    this.instanceCount = 0;
     ZoweZLUX.dispatcher.registerPluginWatcher(plugin.getBasePlugin(), this);
+    ZoweZLUX.dispatcher.registerSearchWatcher(plugin.getBasePlugin(), this);
   }
 
   get label(): string {
@@ -48,6 +53,10 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
 
   get instanceIdArray(): Array<MVDHosting.InstanceId> {
     return this.instanceIds;
+  }
+
+  get searchInstanceIdArray(): Array<MVDHosting.InstanceId> {
+    return this.searchInstanceIds;
   }
 
   generateSnapshot(instanceId: MVDHosting.InstanceId){
@@ -98,6 +107,19 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
     }
   }
 
+  searchInstanceAdded(instanceId: MVDHosting.InstanceId) {
+    this.searchInstanceIds.push(instanceId);
+  }
+
+  searchInstanceRemoved(instanceId: MVDHosting.InstanceId) {
+    for (let i = 0 ; i < this.searchInstanceIds.length; i++) {
+      if (this.searchInstanceIds[i] === instanceId) {
+        this.searchInstanceIds.splice(i,1);
+        return;
+      }
+    }
+  }
+
   instanceAdded(instanceId: MVDHosting.InstanceId, isEmbedded: boolean|undefined) {
     var self = this;
     setTimeout(function() { self.generateSnapshot(instanceId); }, 3000);
@@ -124,9 +146,8 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
   This program and the accompanying materials are
   made available under the terms of the Eclipse Public License v2.0 which accompanies
   this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
-  
+
   SPDX-License-Identifier: EPL-2.0
-  
+
   Copyright Contributors to the Zowe Project.
 */
-

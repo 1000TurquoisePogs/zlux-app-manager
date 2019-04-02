@@ -27,6 +27,8 @@ import { SizeableDirective } from './shared/sizeable.directive';
 import { MvdComponent } from './mvd.component';
 import { AuthenticationModule } from '../../authentication-manager/authentication-manager.module';
 import { PersonalizationComponent } from '../mvd-window-manager/personalization-panel/personalization-panel.component';
+import {SearchService} from './services/search.service';
+import { LaunchAppService } from './services/launch-app.service'
 
 @NgModule({
   imports: [
@@ -51,6 +53,8 @@ import { PersonalizationComponent } from '../mvd-window-manager/personalization-
   ],
   providers: [
     WindowManagerService,
+    SearchService,
+    LaunchAppService,
     /* Expose to the rest of the desktop */
     { provide: MVDWindowManagement.Tokens.WindowManagerToken, useExisting: WindowManagerService }
   ]
@@ -69,4 +73,3 @@ export class WindowManagerModule {
 
   Copyright Contributors to the Zowe Project.
 */
-

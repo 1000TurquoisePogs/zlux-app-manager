@@ -4,9 +4,9 @@
   This program and the accompanying materials are
   made available under the terms of the Eclipse Public License v2.0 which accompanies
   this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
-  
+
   SPDX-License-Identifier: EPL-2.0
-  
+
   Copyright Contributors to the Zowe Project.
 */
 
@@ -72,7 +72,7 @@ export class DesktopPluginDefinitionImpl implements MVDHosting.DesktopPluginDefi
   hasComponents(): boolean {
     return this.basePlugin.hasComponents();
   }
-  
+
   get label(): string {
     if (this.hasWebContent && this.basePlugin.getWebContent().launchDefinition != null) {
       return this.basePlugin.getWebContent().launchDefinition.pluginShortNameDefault;
@@ -96,13 +96,28 @@ export class DesktopPluginDefinitionImpl implements MVDHosting.DesktopPluginDefi
     }
   }
 
+  get abilities(): string[] | null {
+    if (!this.hasWebContent){
+        return null;
+    }
+    let webContent:any = this.basePlugin.getWebContent();
+    if (webContent.launchDefinition != null
+      && webContent.launchDefinition.abilities != null) {
+        console.log('hello dude')
+        console.log(webContent.launchDefinition.abilities[0])
+      return webContent.launchDefinition.abilities;
+    } else {
+      return null;
+    }
+  }
+
   get defaultWindowTitle(): string {
     // TODO
     return this.label;
   }
 
   get defaultWindowStyle(): PluginWindowStyle {
-    let style:PluginWindowStyle = 
+    let style:PluginWindowStyle =
       ((this.hasWebContent && this.basePlugin.getWebContent().defaultWindowStyle) ?
        (this.basePlugin.getWebContent().defaultWindowStyle as PluginWindowStyle) :
        {
@@ -124,9 +139,8 @@ export class DesktopPluginDefinitionImpl implements MVDHosting.DesktopPluginDefi
   This program and the accompanying materials are
   made available under the terms of the Eclipse Public License v2.0 which accompanies
   this distribution, and is available at https://www.eclipse.org/legal/epl-v20.html
-  
+
   SPDX-License-Identifier: EPL-2.0
-  
+
   Copyright Contributors to the Zowe Project.
 */
-
