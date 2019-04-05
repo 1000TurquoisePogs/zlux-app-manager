@@ -26,9 +26,8 @@ import { DraggableDirective } from './shared/draggable.directive';
 import { SizeableDirective } from './shared/sizeable.directive';
 import { MvdComponent } from './mvd.component';
 import { AuthenticationModule } from '../../authentication-manager/authentication-manager.module';
-import { PersonalizationComponent } from '../mvd-window-manager/personalization-panel/personalization-panel.component';
-import {SearchService} from './services/search.service';
-import { LaunchAppService } from './services/launch-app.service'
+import { PersonalizationComponent } from './personalization-panel/personalization-panel.component';
+import { SearchPanelModule } from './search-panel/search-panel.module';
 
 @NgModule({
   imports: [
@@ -36,7 +35,8 @@ import { LaunchAppService } from './services/launch-app.service'
     AuthenticationModule,
     CommonModule,
     SharedModule,
-    LaunchbarModule
+    LaunchbarModule,
+    SearchPanelModule
   ],
   declarations: [
     DesktopComponent,
@@ -53,8 +53,6 @@ import { LaunchAppService } from './services/launch-app.service'
   ],
   providers: [
     WindowManagerService,
-    SearchService,
-    LaunchAppService,
     /* Expose to the rest of the desktop */
     { provide: MVDWindowManagement.Tokens.WindowManagerToken, useExisting: WindowManagerService }
   ]

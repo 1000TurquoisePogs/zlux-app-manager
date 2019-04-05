@@ -139,100 +139,6 @@ body {
 }
 
 /* SB */
-
-.launchbar-search {
-  position: absolute;
-  bottom: 0;
-  right: 160px;
-  width: 290px;
-  height: 60px;
-  z-index: 7;
-}
-
-.launchbar-search .input-group-addon {
-  background: #66bf9c;
-  border-color: #569f89;
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-  background-image: url('../images/window/search.png');
-  background-size: 20px;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 50px;
-}
-
-.launchbar-search .search-field {
-  height: 34px;
-  width: 180px;
-  border-radius: 6px;
-  border: #ccc 1px solid;
-}
-
-.launchbar-search-popup {
-  width: 400px;
-  height: 350px;
-  position: absolute;
-  bottom: 90px;
-  right: 160px;
-  border-radius: 10px;
-  background: #dde8f1;
-  overflow: hidden;
-}
-
-.launchbar-search-caret {
-  position: absolute;
-  bottom: 70px;
-  right: 220px;
-  border-top: 20px solid #c3c7ce;
-}
-
-.launchbar-search-popup .scroll {
-  overflow-y: scroll;
-  height: calc(100% - 40px); /* Compensate for height of "advanced search" div */
-  width: 100%;
-  padding: 25px;
-  padding-top: 15px;
-}
-
-.launchbar-search-popup .header {
-  width: 100%;
-  background: #b0cfd9;
-  padding: 3px;
-  padding-left: 8px;
-  font-size: 10pt;
-  margin-bottom: 5px;
-}
-
-.launchbar-search-popup .advanced-search {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 5px;
-  padding-top: 10px;
-  width: 100%;
-  height: 40px;
-
-  background: #c3c7ce;
-  color: #646b6b;
-  text-align: center;
-}
-
-.launchbar-search-popup .arrow {
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 20px;
-  height: 20px;
-  margin-top: 10px
-}
-
-.launchbar-search-popup .arrow-down {
-  background-image: url('../images/window/down.png');
-}
-
-.launchbar-search-popup .arrow-up {
-  background-image: url('../images/window/up.png');
-}
-
 .desktop-blur {
   filter: blur(10px) grayscale(0.7) hue-rotate(30deg);
   transition: 0.5s filter ease-out;
@@ -262,35 +168,6 @@ body {
   background-repeat: no-repeat;
   background-color: transparent;
   border-color: transparent;
-}
-
-.system-management {
-  background-image: url(../images/window/mainframe-management1.png);
-  background-repeat: no-repeat;
-  width: 982px;
-  height: 890px;
-}
-
-.logical-storage {
-  background-image: url(../images/window/logical1.png);
-  background-repeat: no-repeat;
-  width: 998px;
-  height: 751px;
-}
-
-.tn3270-container {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.addTerminalButton{
-  color:white;
-  background:#3c7299;
-  width:150px;
-  height:40px
 }
 
 .launchbar-button-container {

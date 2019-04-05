@@ -43,12 +43,20 @@
 .launchbar-tray-icon.user {
   background-image: url('../../../../../assets/images/launchbar/person.png');
   background-size: 26px 26px;
-  margin-right: 18px;
+  margin-right: 48px;
+
 }
 
 .launchbar-tray-icon.settings {
   background-image: url('../../../../../assets/images/launchbar/settings.png');
   background-size: 30px 30px;
+  margin-right: 8px;
+}
+
+.launchbar-tray-icon.search {
+  background-image: url('../../../../../assets/images/launchbar/search.png');
+  background-size: 20px 20px;
+  margin-right: 8px;
 }
 
 .launchbar-user:hover {

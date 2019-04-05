@@ -21,10 +21,12 @@ import { BaseLogger } from 'virtual-desktop-logger';
   templateUrl: 'desktop.component.html'
 })
 export class DesktopComponent {
-contextMenuDef: {xPos: number, yPos: number, items: ContextMenuItem[]} | null;
-private authenticationManager: MVDHosting.AuthenticationManagerInterface;
-public isPersonalizationPanelVisible: boolean;
-constructor(
+  contextMenuDef: {xPos: number, yPos: number, items: ContextMenuItem[]} | null;
+  private authenticationManager: MVDHosting.AuthenticationManagerInterface;
+  public isPersonalizationPanelVisible: boolean;
+  public isSearchPanelVisible: boolean;
+
+  constructor(
     public windowManager: WindowManagerService,
     private http: Http,
     private injector: Injector
@@ -49,12 +51,12 @@ constructor(
   }
 
   personalizationPanelToggle(): void {
-    if (this.isPersonalizationPanelVisible)
-    {
-      this.isPersonalizationPanelVisible = false;
-    } else {
-      this.isPersonalizationPanelVisible = true;
-    }
+    this.isPersonalizationPanelVisible = !this.isPersonalizationPanelVisible;
+  }
+
+  searchPanelToggle(): void {
+    console.log('toggling search panel');
+    this.isSearchPanelVisible = !this.isSearchPanelVisible;    
   }
 
   closeContextMenu(): void {

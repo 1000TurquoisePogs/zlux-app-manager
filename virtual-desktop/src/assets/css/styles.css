@@ -45,15 +45,6 @@
   padding: 0 1em 0 0;
 }
 
-/* Super Search */
-.form-control.rs-com-css-super-search-input {
-  width: 30em;
-}
-
-.form-control.rs-com-css-super-search-error {
-  border: 1px solid red;
-}
-
 .table .rs-com-css-table-count {
   text-align: right;
 }

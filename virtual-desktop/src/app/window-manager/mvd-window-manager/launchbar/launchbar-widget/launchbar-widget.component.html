@@ -9,7 +9,6 @@
 
   Copyright Contributors to the Zowe Project.
 -->
-
 <div class="launchbar-user-popup" [class.hidden]="!popupVisible">
   <h5 class="launchbar-username">{{getUsername()}}</h5>
   <button #logoutbutton class="btn btn-primary launchbar-button" (click)="logout()"
@@ -28,6 +27,7 @@
     <br>
     <span>{{date | date:'shortDate'}}</span>
   </span>
+  <div #usericon class="launchbar-tray-icon search" (click)="toggleSearchPanel()"></div>
   <div #usericon class="launchbar-tray-icon settings" (click)="togglePersonalizationPanel()"></div>
   <div #usericon class="launchbar-tray-icon user" (click)="togglePopup()"></div>
 </div>

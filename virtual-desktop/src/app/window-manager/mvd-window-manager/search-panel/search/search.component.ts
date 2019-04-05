@@ -1,12 +1,10 @@
-// import { SearchService } from '../../services/search.service';
 // import { AutocompleteService } from '../services/autocomplete.service.ts';
-import { LaunchAppService } from '../../services/launch-app.service';
+import { LaunchAppService } from '../services/launch-app.service';
 import { Component, OnInit, ViewChild, ViewChildren, Renderer2, ElementRef } from '@angular/core';
 // import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
-import { SearchResult } from '../../models/search-result.model';
 
 @Component({
-  selector: 'search',
+  selector: 'org-zowe-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
   host: {
@@ -26,7 +24,6 @@ export class SearchComponent implements OnInit {
   public loadingQuery: boolean = false;
   public suggestions: string[];
   public historyList: string[];
-  public appList: string[];
   public originalSearchTerm: any = '';
   public displaySuggestions: boolean = false;
   public suggestionList: any;
@@ -35,28 +32,25 @@ export class SearchComponent implements OnInit {
   public entityIndex: number = -1;
   public entitySuggestionList: string[] = [];
   public typingDelay: any;
-  public tempAppSearchResults: SearchResult = new SearchResult();
-  public tempWebSearchResults: SearchResult = new SearchResult();
-  public viewMode:string = 'tab1';
+//  public tempAppSearchResults: MVDHosting.SearchResult|undefined;
+//  public tempWebSearchResults: MVDHosting.SearchResult|undefined;
+
+  public searchHandlerResults: MVDHosting.SearchResult[];
+  
+  public viewMode:string = '';
   public displayPopover:boolean = false;
   public regexActive:boolean = false;
-  public zoweWindow: any = window.parent;
-
-
+  public handlerCount: number;
+  private searchManager = ZoweZLUX.searchManager;
+  
 
   constructor(
     private _eref: ElementRef,
-    // private searchService: SearchService,
     // private autocompleteService: AutocompleteService,
     private launchAppService: LaunchAppService,
-    private renderer: Renderer2,
-    // @Inject(Angular2InjectionTokens.LAUNCH_METADATA) private launchMetadata: any
-  ) {
-    // if (this.launchMetadata) {
-    //   console.log('Recvd launch metadata=' + JSON.stringify(this.launchMetadata));
-    //   this.searchTerm = this.launchMetadata.data.searchInput;
-    // }
-  }
+    private renderer: Renderer2
+  ) {  }
+  
   public onClick(event:any) {
    if (!this._eref.nativeElement.contains(event.target)) // or some similar check
     this.displayPopover = false;
@@ -64,16 +58,12 @@ export class SearchComponent implements OnInit {
 
   public ngOnInit(): void {
     this.inputElement = this.searchInput.nativeElement;
+    this.handlerCount = this.searchManager.getHandlers().size;
   }
   public inputPopover():void{
     console.log("inputPopover")
     this.displayPopover=!this.displayPopover;
   }
-  public ibmSearch():void{
-    this.inputElement.value = "ibmknow:";
-    this.displayPopover = false;
-  }
-
   public appSearch():void{
     this.inputElement.value = "myapp:";
     this.displayPopover = false;
@@ -123,41 +113,37 @@ export class SearchComponent implements OnInit {
     this.displaySuggestions = false;
     this.checkRegexActive();
     this.viewMode = "tab1";
-    this.tempAppSearchResults = new SearchResult();
-    this.tempWebSearchResults = new SearchResult();
-
     this.loadingQuery = true;
     this.currentTab = undefined;
     const stripQuery:string = "search="+ encodeURI(this.stripRegex());
-    let searchCapabilities:string[] = [];
+    let searchTopics:string[] = [];
+    let searchHandlers: string[] = [];
+    /*
     if (this.inputElement.value.toLowerCase().startsWith("myapp:")){
-        searchCapabilities.push("app");
+        searchHandlers.push("app");
         this.viewMode = "tab3";
     }
     else if(this.inputElement.value.toLowerCase().startsWith("ibmknow:")){
-      searchCapabilities.push("ibm knowledge center");
+      searchHandlers.push("ibm knowledge center");
       this.viewMode = "tab2";
     }
-    else{
-      searchCapabilities.push("app");
-      searchCapabilities.push("ibm knowledge center");
-    }
-    const searchManager = this.zoweWindow.ZoweZLUX.searchManager;
-    searchManager.conductSearches(stripQuery, searchCapabilities)
-    .then((results:SearchResult[])=> {
+    */
+    this.searchManager.search(stripQuery, searchTopics, searchHandlers)
+    .then((results:MVDHosting.SearchResult[])=> {
       this.loadingQuery = false;
       this.displaySuggestions = true;
+      this.searchHandlerResults = results;
+      /*
       for(const result of results){
         console.log("type detected:" + result.type)
-        if (result.type === "app"){
-          console.log("result.type === \"app\"")
+        if (result.id === "app"){
           this.tempAppSearchResults = result;
         }
-        else if (result.type === "ibm knowledge center"){
-          console.log("result.type === \"ibm knowledge center\"")
+        else if (result.id === "ibmknow"){
           this.tempWebSearchResults = result;
         }
       }
+      */
     }, (err:any) => {
         console.log(err);
         this.loadingQuery = false;

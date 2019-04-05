@@ -21,12 +21,6 @@ import { LaunchbarIconComponent } from './launchbar-icon/launchbar-icon.componen
 import { LaunchbarMenuComponent } from './launchbar-menu/launchbar-menu.component';
 import { LaunchbarWidgetComponent } from './launchbar-widget/launchbar-widget.component';
 import { LaunchbarInstanceViewComponent } from './launchbar-instance-view/launchbar-instance-view.component';
-import {LaunchbarSpotlightComponent} from './launchbar-spotlight/launchbar-spotlight.component';
-import {SearchComponent} from './search/search.component';
-import { SearchTableComponent } from './search-table/search-table.component';
-// import { SearchService } from '../services/search.service';
-// import { LaunchAppService } from '../services/launch-app.service'
-
 
 @NgModule({
   imports: [
@@ -39,18 +33,11 @@ import { SearchTableComponent } from './search-table/search-table.component';
     LaunchbarIconComponent,
     LaunchbarMenuComponent,
     LaunchbarWidgetComponent,
-    LaunchbarInstanceViewComponent,
-    LaunchbarSpotlightComponent,
-    SearchComponent,
-    SearchTableComponent
+    LaunchbarInstanceViewComponent
   ],
   exports: [
     LaunchbarComponent
-  ],
-  // providers:[
-  //   SearchService,
-  //   LaunchAppService
-  // ]
+  ]
 })
 export class LaunchbarModule { }
 

@@ -87,6 +87,11 @@ export class LaunchbarWidgetComponent implements OnInit {
     //this.activeToggle();
   }
 
+  toggleSearchPanel() {
+    this.desktopComponent.searchPanelToggle();
+  }
+  
+
   @HostListener('document:mousedown', ['$event'])
   onMouseDown(event: MouseEvent): void {
     if (this.popupVisible && event
