@@ -144,45 +144,19 @@
         </div>
       </div-->
 
-
-      <!--div id="tab3" class="tab-slider--body" *ngSwitchCase="'tab3'">
-        <div class="search-result">
-          <div *ngIf="displaySuggestions">
-            <div class="marquee" *ngIf="tempAppSearchResults.entries.length > 0">
-              APPLICATIONS SEARCH
-            </div>
-            <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entries.length > 0">
-              <li class="app-list" *ngFor="let app of tempAppSearchResults.entries" (keydown.enter)="launchApp(app)">
-                  <span class="toolbox">
-                    <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
-                  </span>
-                  <span (click)="launchApp(app)">
-                    {{app.name}}
-                  </span>
-              </li>
-            </ul>
-            <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entries.length < 1">
-              <li class="app-list" >
-                  <span >
-                    No results found
-                  </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div-->
-
           <div class="tab-slider--body" *ngSwitchCase="''">
             <div class="search-result" *ngIf="displaySuggestions">
 
         <div *ngFor="let handlerResult of searchHandlerResults">              
               <div class="marquee">{{handlerResult.longName}}</div>
               <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
-                <div *ngIf="handlerResult.type == 1">
-                  <li class="url-list"  *ngFor="let entry of handlerResult.entries" (keydown.enter)="launchApp(app)">
-                    <div class="book">
+                
+                <div *ngIf="handlerResult.type == 'web'">
+                  <li class="url-list"  *ngFor="let entry of handlerResult.entries">
+                    <div class="entry-icon">
                       <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
                     </div>
+
                     <div>
                       <div class="url-href">
                         <a href={{entry.data.href}} target="_blank">{{entry.title}}</a>
@@ -194,16 +168,25 @@
                   </li>
                 </div>
                 
-                <div *ngIf="handlerResult.type == 2">
-                  <li class="url-list" *ngFor="let entry of handlerResult.entries" (keydown.enter)="launchApp(app)">
-                    <span class="toolbox">
+                <div *ngIf="handlerResult.type == 'app'">
+                  <li class="url-list" *ngFor="let entry of handlerResult.entries"
+                      (click)="invokeAction(entry)"
+                      (keydown.enter)="invokeAction(entry)">
+                    <div class="entry-icon">
                       <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
-                    </span>
-                    <span (click)="launchApp(app)">
-                      {{app.name}}
-                    </span>
+                    </div>
+
+                    <div>
+                      <div class="url-href"
+                           (click)="invokeAction(entry)"
+                           (keydown.enter)="invokeAction(entry)">{{entry.title}}</div>
+                      <div>
+                        {{entry.summary}}
+                      </div>
+                    </div>
                   </li>
                 </div>
+                
               </ul>
               <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length < 1">
                 <li class="url-list">
@@ -223,11 +206,13 @@
             <div class="search-result" *ngIf="displaySuggestions">
               <div class="marquee">{{handlerResult.longName}}</div>
               <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
-                <div *ngIf="handlerResult.type == 1">
-                  <li class="url-list"  *ngFor="let entry of handlerResult.entries" (keydown.enter)="launchApp(app)">
-                    <div class="book">
+
+                <div *ngIf="handlerResult.type == 'web'">
+                  <li class="url-list"  *ngFor="let entry of handlerResult.entries">
+                    <div class="entry-icon">
                       <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
                     </div>
+
                     <div>
                       <div class="url-href">
                         <a href={{entry.data.href}} target="_blank">{{entry.title}}</a>
@@ -239,16 +224,25 @@
                   </li>
                 </div>
                 
-                <div *ngIf="handlerResult.type == 2">
-                  <li class="url-list" *ngFor="let entry of handlerResult.entries" (keydown.enter)="launchApp(app)">
-                    <span class="toolbox">
+                <div *ngIf="handlerResult.type == 'app'">
+                  <li class="url-list" *ngFor="let entry of handlerResult.entries"
+                      (click)="invokeAction(entry)"
+                      (keydown.enter)="invokeAction(entry)">
+                    <div class="entry-icon">
                       <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
-                    </span>
-                    <span (click)="launchApp(app)">
-                      {{app.name}}
-                    </span>
+                    </div>
+
+                    <div>
+                      <div class="url-href"
+                      (click)="invokeAction(entry)"
+                      (keydown.enter)="invokeAction(entry)">{{entry.title}}</div>
+                      <div>
+                        {{entry.summary}}
+                      </div>
+                    </div>
                   </li>
                 </div>
+                
               </ul>
               <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length < 1">
                 <li class="url-list">

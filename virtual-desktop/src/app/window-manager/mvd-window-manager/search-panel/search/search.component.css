@@ -55,7 +55,7 @@ input:-webkit-autofill {
   position: absolute;
     top: 81px;
     left: 5px;
-    z-index: 1060;
+    z-index: 4;
     display: block;
     max-width: 550px;
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -112,7 +112,7 @@ input:-webkit-autofill {
 .autocomplete-list {
   border-bottom: none;
   border-top: none;
-  z-index: 99;
+  z-index: 3;
   top: 100%;
   margin: 1rem 0;
   padding: 0;
@@ -180,12 +180,8 @@ input:-webkit-autofill {
   justify-content: space-around;
   padding: 1rem;
 }
-.book{
+.entry-icon {
   margin: .1rem 1rem 0;
-}
-.toolbox img{
-  width:36px;
-  margin:.1rem 1rem 0;
 }
 .url-href{
   margin-bottom: .5rem;

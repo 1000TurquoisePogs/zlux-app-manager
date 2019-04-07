@@ -247,6 +247,10 @@ export class SearchComponent implements OnInit {
       this.displaySuggestions = true;
   }
 
+  public invokeAction(entry: any): void {
+    ZoweZLUX.dispatcher.invokeAction(entry.data.action, entry.data.argData);
+  }
+
   public autocomplete(): void {
     console.log("autocomplete")
 
