@@ -12,7 +12,11 @@
 
 import { Component, ElementRef, HostListener, Output, EventEmitter, Injector } from '@angular/core';
 import { WindowManagerService } from '../shared/window-manager.service'
-// import { TranslationService } from 'angular-l10n';
+//import { TranslationService } from 'angular-l10n';
+//import { config }  from './test/types';
+//import { HelloHandler, pluginDefs } from './test/ooc-app';
+
+
 
 @Component({
   selector: 'org-zowe-search-panel',
@@ -24,18 +28,55 @@ export class SearchPanelComponent {
   isActive: boolean = false;
   pluginManager: MVDHosting.PluginManagerInterface;
   public applicationManager: MVDHosting.ApplicationManagerInterface;
-
+  
   constructor(
     private elementRef: ElementRef,
     public windowManager: WindowManagerService,
     private injector: Injector,
     // private translation: TranslationService
-
   ) {
     // Workaround for AoT problem with namespaces (see angular/angular#15613)
     this.applicationManager = this.injector.get(MVDHosting.Tokens.ApplicationManagerToken);
     this.pluginManager = this.injector.get(MVDHosting.Tokens.PluginManagerToken);
     this.menuStateChanged = new EventEmitter<boolean>();
+    let test = true;
+    if (test) {
+/*
+      const configJson:any = config;
+      for (let i:number = 0; i < configJson.searchNodes.length; i++){
+        //TODO put this elsewhere
+        const handler = new WebSearchHandler(
+          {
+            definition: configJson.searchNodes[i],
+            id: "_web:search."+configJson.searchNodes[i].name
+          });
+        ZoweZLUX.searchManager.addSearchHandler(handler);
+      }
+
+
+      for (let i:number = 0; i < pluginDefs.length; i++){
+        //TODO put this elsewhere
+        const plugin = pluginDefs[i];
+        for (let j = 0; j < plugin.search.handlers.length; j++) {
+          const handlerDef = plugin.search.handlers[j];
+          const id = plugin.identifier+":search."+handlerDef.name;
+          const initName: string = ''+handlerDef.initializerName;
+          //TODO big typescript hack... ooc-app.ts was being silently skipped
+          if (initName == 'helloInit') {
+            const handler:any = new HelloHandler({
+              definition: handlerDef,
+              //TODO make something that isnt going to conflict or look weird with dataservices
+              id: id,
+              pluginDefinition: plugin,
+              logger: ZoweZLUX.logger.makeComponentLogger(id)
+            });
+
+            ZoweZLUX.searchManager.addSearchHandler(handler);
+          }        
+        }
+      }
+*/
+    }
   }
 
   ngOnInit(): void {

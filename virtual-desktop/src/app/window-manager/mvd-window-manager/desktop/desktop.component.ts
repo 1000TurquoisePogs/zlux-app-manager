@@ -11,7 +11,7 @@
 */
 
 import { Component, Injector } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { ContextMenuItem } from 'pluginlib/inject-resources';
 import { WindowManagerService } from '../shared/window-manager.service';
 import { BaseLogger } from 'virtual-desktop-logger';
@@ -28,13 +28,15 @@ export class DesktopComponent {
 
   constructor(
     public windowManager: WindowManagerService,
-    private http: Http,
+    private http: HttpClient,
     private injector: Injector
   ) {
     // Workaround for AoT problem with namespaces (see angular/angular#15613)
     this.authenticationManager = this.injector.get(MVDHosting.Tokens.AuthenticationManagerToken);
     this.contextMenuDef = null;
     this.authenticationManager.registerPostLoginAction(new AppDispatcherLoader(this.http));
+    this.authenticationManager.registerPostLoginAction(new SearchHandlerLoader(this.http));
+    this.authenticationManager.registerPreLogoutAction(ZoweZLUX.searchManager);    
   }
   ngOnInit(): void {
     this.windowManager.contextMenuRequested.subscribe(menuDef => {
@@ -64,55 +66,73 @@ export class DesktopComponent {
   }
 }
 
+//must do search loding here rather than in search UI, due to the UI being JIT loaded
+class SearchHandlerLoader implements MVDHosting.LoginActionInterface {
+  private readonly log: ZLUX.ComponentLogger = BaseLogger;
+
+  constructor(public http: HttpClient) { }
+  
+  async onLogin(username:string, plugins:ZLUX.Plugin[]) {
+    this.log.info("Loading search handlers upon login of user="+username);
+    for (let plugin of plugins) {
+      let plugin1_1: ZLUX.Plugin1_1 = (plugin as ZLUX.Plugin1_1);
+      if (plugin1_1.getSearchCapabilities) {
+        await ZoweZLUX.searchManager.loadHandlers(plugin1_1);
+      }
+    }
+    return true;
+  }
+
+}
+
 class AppDispatcherLoader implements MVDHosting.LoginActionInterface {
   private readonly log: ZLUX.ComponentLogger = BaseLogger;
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
-  onLogin(username:string, plugins:ZLUX.Plugin[]):boolean {
+  async onLogin(username:string, plugins:ZLUX.Plugin[]) {
     let desktop:ZLUX.Plugin = ZoweZLUX.pluginManager.getDesktopPlugin();
     let recognizersUri = ZoweZLUX.uriBroker.pluginConfigUri(desktop,'recognizers');
     let actionsUri = ZoweZLUX.uriBroker.pluginConfigUri(desktop,'actions');
     this.log.debug(`Getting recognizers from "${recognizersUri}", actions from "${actionsUri}"`);
-    this.http.get(recognizersUri).map((res:Response)=>res.json()).subscribe((config: any)=> {
-      if (config) {
-        let appContents = config.contents;
-        let appsWithRecognizers:string[] = [];
-        plugins.forEach((plugin:ZLUX.Plugin)=> {
-          let id = plugin.getIdentifier();
-          if (appContents[id]) {
-            appsWithRecognizers.push(id);
+    let config: any = await this.http.get(recognizersUri).toPromise();
+    if (config) {
+      let appContents = config.contents;
+      let appsWithRecognizers:string[] = [];
+      plugins.forEach((plugin:ZLUX.Plugin)=> {
+        let id = plugin.getIdentifier();
+        if (appContents[id]) {
+          appsWithRecognizers.push(id);
+        }
+      });
+      appsWithRecognizers.forEach(appWithRecognizer=> {
+        appContents[appWithRecognizer].recognizers.forEach((recognizerObject:ZLUX.RecognizerObject)=> {
+          ZoweZLUX.dispatcher.addRecognizerFromObject(recognizerObject.clause,recognizerObject.id);
+        });
+        this.log.info(`Loaded ${appContents[appWithRecognizer].recognizers.length} recognizers for App(${appWithRecognizer})`);
+      });
+    }
+
+    config = await this.http.get(actionsUri).toPromise();
+    if (config) {
+      let appContents = config.contents;
+      let appsWithActions:string[] = [];
+      plugins.forEach((plugin:ZLUX.Plugin)=> {
+        let id = plugin.getIdentifier();
+        if (appContents[id]) {
+          appsWithActions.push(id);
+        }
+      });
+      appsWithActions.forEach(appWithAction=> {
+        appContents[appWithAction].actions.forEach((actionObject:any)=> {
+          let mode: any = ZoweZLUX.dispatcher.constants.ActionTargetMode[actionObject.targetMode];
+          let type: any = ZoweZLUX.dispatcher.constants.ActionType[actionObject.type];
+          if (actionObject.id && actionObject.defaultName && actionObject.targetId && actionObject.arg && mode !== undefined && type !== undefined) {
+            ZoweZLUX.dispatcher.registerAction(ZoweZLUX.dispatcher.makeAction(actionObject.id, actionObject.defaultName, (mode as ZLUX.ActionTargetMode), (type as ZLUX.ActionType), actionObject.targetId, actionObject.arg));
           }
         });
-        appsWithRecognizers.forEach(appWithRecognizer=> {
-          appContents[appWithRecognizer].recognizers.forEach((recognizerObject:ZLUX.RecognizerObject)=> {
-            ZoweZLUX.dispatcher.addRecognizerFromObject(recognizerObject.clause,recognizerObject.id);
-          });
-          this.log.info(`Loaded ${appContents[appWithRecognizer].recognizers.length} recognizers for App(${appWithRecognizer})`);
-        });
-      }
-    });
-    this.http.get(actionsUri).map((res:Response)=>res.json()).subscribe((config: any)=> {
-      if (config) {
-        let appContents = config.contents;
-        let appsWithActions:string[] = [];
-        plugins.forEach((plugin:ZLUX.Plugin)=> {
-          let id = plugin.getIdentifier();
-          if (appContents[id]) {
-            appsWithActions.push(id);
-          }
-        });
-        appsWithActions.forEach(appWithAction=> {
-          appContents[appWithAction].actions.forEach((actionObject:any)=> {
-            let mode: any = ZoweZLUX.dispatcher.constants.ActionTargetMode[actionObject.targetMode];
-            let type: any = ZoweZLUX.dispatcher.constants.ActionType[actionObject.type];
-            if (actionObject.id && actionObject.defaultName && actionObject.targetId && actionObject.arg && mode !== undefined && type !== undefined) {
-              ZoweZLUX.dispatcher.registerAction(ZoweZLUX.dispatcher.makeAction(actionObject.id, actionObject.defaultName, (mode as ZLUX.ActionTargetMode), (type as ZLUX.ActionType), actionObject.targetId, actionObject.arg));
-            }
-          });
-          this.log.info(`Loaded ${appContents[appWithAction].actions.length} actions for App(${appWithAction})`);
-        });
-      }
-    });
+        this.log.info(`Loaded ${appContents[appWithAction].actions.length} actions for App(${appWithAction})`);
+      });
+    }
     return true;
   }
 }

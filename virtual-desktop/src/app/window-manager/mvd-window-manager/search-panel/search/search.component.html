@@ -207,7 +207,7 @@
               <div class="marquee">{{handlerResult.longName}}</div>
               <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
 
-                <div *ngIf="handlerResult.type == 'web'">
+                <div *ngIf="handlerResult.type.startsWith('web')">
                   <li class="url-list"  *ngFor="let entry of handlerResult.entries">
                     <div class="entry-icon">
                       <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">

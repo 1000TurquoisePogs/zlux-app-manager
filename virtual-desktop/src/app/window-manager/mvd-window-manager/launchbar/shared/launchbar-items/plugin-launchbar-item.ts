@@ -18,9 +18,7 @@ import * as html2canvas from 'html2canvas';
 export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.PluginWatcher {
   public instanceIds: Array<MVDHosting.InstanceId>;
   public instanceCount: number;
-  public searchInstanceIds: Array<MVDHosting.InstanceId>;
-  public searchInstanceCount: number;
-
+ 
   public windowPreviews: Array<HTMLImageElement>;
   public windowPreviewsIds: Array<number>;
 
@@ -31,12 +29,9 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
     super();
     this.instanceIds = [];
     this.instanceCount = 0;
-    this.searchInstanceIds= [];
-    this.searchInstanceCount = 0;
     this.windowPreviews = [];
     this.windowPreviewsIds = [];
     ZoweZLUX.dispatcher.registerPluginWatcher(plugin.getBasePlugin(), this);
-    ZoweZLUX.dispatcher.registerSearchWatcher(plugin.getBasePlugin(), this);
   }
 
   get label(): string {
@@ -53,10 +48,6 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
 
   get instanceIdArray(): Array<MVDHosting.InstanceId> {
     return this.instanceIds;
-  }
-
-  get searchInstanceIdArray(): Array<MVDHosting.InstanceId> {
-    return this.searchInstanceIds;
   }
 
   generateSnapshot(instanceId: MVDHosting.InstanceId){
@@ -104,19 +95,6 @@ export class PluginLaunchbarItem extends LaunchbarItem{// implements ZLUX.Plugin
     if (index > -1) {
       this.windowPreviews.splice(index, 1);
       this.windowPreviewsIds.splice(index, 1);
-    }
-  }
-
-  searchInstanceAdded(instanceId: MVDHosting.InstanceId) {
-    this.searchInstanceIds.push(instanceId);
-  }
-
-  searchInstanceRemoved(instanceId: MVDHosting.InstanceId) {
-    for (let i = 0 ; i < this.searchInstanceIds.length; i++) {
-      if (this.searchInstanceIds[i] === instanceId) {
-        this.searchInstanceIds.splice(i,1);
-        return;
-      }
     }
   }
 

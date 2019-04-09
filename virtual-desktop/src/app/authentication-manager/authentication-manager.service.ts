@@ -138,13 +138,21 @@ export class AuthenticationManager {
     return new Observable((observer)=> {      
       ZoweZLUX.pluginManager.loadPlugins(ZLUX.PluginType.Application).then((plugins:ZLUX.Plugin[])=> {
         if (this.username != null) {
-          for (let i = 0; i < this.postLoginActions.length; i++) {
-            let success = this.postLoginActions[i].onLogin(this.username, plugins);
+          let handled = 0;
+          let increment = (i: number, success: boolean) => {
             this.log.debug(`LoginAction ${i}=${success}`);
+            handled++;
+            if (handled == this.postLoginActions.length) {
+              observer.next(true);
+              observer.complete();
+            }
+          };
+          for (let i = 0; i < this.postLoginActions.length; i++) {
+            this.postLoginActions[i].onLogin(this.username, plugins)
+              .then((success:boolean)=>{ increment(i,success); })
+              .catch((e)=>{ increment(i,false); });  
           }
         }
-        observer.next(true);
-        observer.complete();
       }).catch((err:any)=> {
         observer.error(err);
       });
