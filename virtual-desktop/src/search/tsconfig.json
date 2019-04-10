@@ -1,0 +1,9 @@
+{
+  "extends": "../../plugin-config/tsconfig.search.base.json",
+  "include": [
+    "./*.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "../../web"
+  }
+}
