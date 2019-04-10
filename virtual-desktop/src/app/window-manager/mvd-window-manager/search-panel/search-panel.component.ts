@@ -28,6 +28,7 @@ export class SearchPanelComponent {
   isActive: boolean = false;
   pluginManager: MVDHosting.PluginManagerInterface;
   public applicationManager: MVDHosting.ApplicationManagerInterface;
+  public displayDescription: boolean = false;
   
   constructor(
     private elementRef: ElementRef,

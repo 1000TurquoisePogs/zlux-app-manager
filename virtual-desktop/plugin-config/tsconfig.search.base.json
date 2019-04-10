@@ -1,0 +1,28 @@
+{
+  "compileOnSave": true,
+  "files": [
+    "../../../zlux-platform/interface/src/index.d.ts",
+    "../../../zlux-platform/interface/src/mvd-hosting.d.ts"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "../dts",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "module": "amd",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "target": "es5",
+    "lib": [
+      "es2015",
+      "dom"
+    ]
+  }
+}

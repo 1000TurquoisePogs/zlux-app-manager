@@ -137,6 +137,7 @@ export class AuthenticationManager {
   private performPostLoginActions(): Observable<any> {
     return new Observable((observer)=> {      
       ZoweZLUX.pluginManager.loadPlugins(ZLUX.PluginType.Application).then((plugins:ZLUX.Plugin[])=> {
+        const desktopPlugin = ZoweZLUX.pluginManager.getDesktopPlugin();
         if (this.username != null) {
           let handled = 0;
           let increment = (i: number, success: boolean) => {
@@ -148,7 +149,7 @@ export class AuthenticationManager {
             }
           };
           for (let i = 0; i < this.postLoginActions.length; i++) {
-            this.postLoginActions[i].onLogin(this.username, plugins)
+            this.postLoginActions[i].onLogin(this.username, plugins, desktopPlugin)
               .then((success:boolean)=>{ increment(i,success); })
               .catch((e)=>{ increment(i,false); });  
           }

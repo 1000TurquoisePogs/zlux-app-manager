@@ -72,8 +72,12 @@ class SearchHandlerLoader implements MVDHosting.LoginActionInterface {
 
   constructor(public http: HttpClient) { }
   
-  async onLogin(username:string, plugins:ZLUX.Plugin[]) {
+  async onLogin(username:string, plugins:ZLUX.Plugin[], desktopPlugin: ZLUX.Plugin) {
     this.log.info("Loading search handlers upon login of user="+username);
+    let desktop: ZLUX.Plugin1_1 = (desktopPlugin as ZLUX.Plugin1_1);
+    if (desktop.getSearchCapabilities) {
+      await ZoweZLUX.searchManager.loadHandlers(desktop);
+    }
     for (let plugin of plugins) {
       let plugin1_1: ZLUX.Plugin1_1 = (plugin as ZLUX.Plugin1_1);
       if (plugin1_1.getSearchCapabilities) {
@@ -89,7 +93,7 @@ class AppDispatcherLoader implements MVDHosting.LoginActionInterface {
   private readonly log: ZLUX.ComponentLogger = BaseLogger;
   constructor(private http: HttpClient) { }
 
-  async onLogin(username:string, plugins:ZLUX.Plugin[]) {
+  async onLogin(username:string, plugins:ZLUX.Plugin[], desktopPlugin: ZLUX.Plugin) {
     let desktop:ZLUX.Plugin = ZoweZLUX.pluginManager.getDesktopPlugin();
     let recognizersUri = ZoweZLUX.uriBroker.pluginConfigUri(desktop,'recognizers');
     let actionsUri = ZoweZLUX.uriBroker.pluginConfigUri(desktop,'actions');

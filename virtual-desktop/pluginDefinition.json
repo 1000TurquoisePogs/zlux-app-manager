@@ -41,6 +41,32 @@
       }
     }
   },
+  "search": {
+    "filename": "searchHandlers.js",
+    "handlers": [
+      {
+        "type": "app",
+        "name": "Apps",
+        "description": "Launch App",
+        "topics": ["apps"],
+        "handlerFactory": "appsInit"
+      },
+      {
+        "type": "web-json",
+        "name": "knowledgecenter",
+        "description": "IBM Knowledge Center",
+        "topics": ["ibm","doc"],
+        "title": "topics.#.label",
+        "summary": "topics.#.summary",
+        "resultHrefPrefix": "https://www.ibm.com/support/knowledgecenter/",
+        "resultHref":  "topics.#.href",
+        "requestType": 0,
+        "queryParm": "query",
+        "limitParm": "limit",
+        "queryHref": "https://www.ibm.com/support/knowledgecenter/v1/search?query=%q&offset=0&products=&tags=&lang=en&fallback=true&"        
+      }
+    ]
+  },
   "dataServices": [
     {
       "type": "router",
