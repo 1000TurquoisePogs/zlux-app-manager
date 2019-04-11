@@ -39,7 +39,11 @@ export class AppsHandler implements MVDHosting.SearchHandler {
       const constants = ZoweZLUX.dispatcher.constants;
       plugins.forEach((plugin:ZLUX.Plugin)=>{
         let name = plugin.getWebContent().launchDefinition.pluginShortNameDefault;
-        entries.push({title:name, summary:"Launch "+name+" App", data:
+        entries.push({title:name,
+                      summary:"Launch "+name+" App",
+                      imageRef: ZoweZLUX.uriBroker.pluginResourceUri(plugin,
+                                                                     plugin.getWebContent().launchDefinition.imageSrc),
+                      data:
                       {action: ZoweZLUX.dispatcher.makeAction('what',
                                                               'what',
                                                               constants.ActionTargetMode.PluginCreate,

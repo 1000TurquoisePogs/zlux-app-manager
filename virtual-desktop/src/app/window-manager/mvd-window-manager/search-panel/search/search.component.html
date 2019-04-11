@@ -1,7 +1,9 @@
 <div class="search-container">
   <div class="bx--row search-row">
       <div class="bx--col-xs-12 search-section">
-        <button class="inputPopover" (click)="inputPopover()"> <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/spyglass-caret.png"/></button>
+        <button class="inputPopover" (click)="inputPopover()">
+          <img src="/ZLUX/plugins/org.zowe.zlux.ng2desktop/web/assets/images/launchbar/spyglass-caret.png"/>
+        </button>
         <input #searchInput
         placeholder="Type to search"
         class="search-input"
@@ -50,213 +52,125 @@
   <div class="tab-slider--nav"  *ngIf="searchHandlerResults && searchHandlerResults.length > 0">
     <ul class="tab-slider--tabs" >
       <li class="tab-slider--trigger" [class.active]="viewMode == ''" rel="" (click)="viewMode = ''">All</li>      
-      <div *ngFor="let handlerResult of searchHandlerResults">
-        <li *ngIf="handlerResult.entries.length > 0" class="tab-slider--trigger" [class.active]="viewMode == handlerResult.id" rel="handlerResult.id" (click)="viewMode = handlerResult.id">{{handlerResult.shortName}}</li>
-      </div>
-      <!--
-        <li *ngIf="!regexActive" class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'">All</li>
-        <li *ngIf="tempWebSearchResults && tempWebSearchResults.entries && tempWebSearchResults.entries.length > 0" class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'">IBM knowledge base</li>
-        <li *ngIf="tempAppSearchResults && tempAppSearchResults.entries && tempAppSearchResults.entries.length > 0" class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'">Applications</li>
-        -->
-      </ul>
-    </div>
-    <div class="tab-slider--container" [ngSwitch]="viewMode">
-      <!--div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
-        <div class="search-result">
-          <div *ngIf="displaySuggestions">
-            <div class="marquee" *ngIf="tempWebSearchResults && tempWebSearchResults.entries && tempWebSearchResults.entries.length > 0">
-              IBM KNOWLEDGE BASE ARTICLES
-            </div>
-            <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entries.length > 0">
-              <li class="url-list" *ngFor="let webRes of tempWebSearchResults.entries" (keydown.enter)="launchApp(app)">
-                <div class="book">
-                  <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
-                </div>
-                <div>
-                  <div class="url-href">
-                    <a href={{webRes.data.href}} target="_blank">{{webRes.title}}</a>
-                  </div>
-                  <div>
-                    {{webRes.summary}}
-                  </div>
-                </div>
-            </li>
-          </ul>
-          <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entries.length < 1">
-            <li class="url-list">
-              <span>
-                No results found
-              </span>
-            </li>
-          </ul>
-        </div>
-        <div *ngIf="displaySuggestions">
-          <div class="marquee" *ngIf="tempAppSearchResults && tempAppSearchResults.entries && tempAppSearchResults.entries.length > 0">
-            APPLICATIONS SEARCH
-          </div>
-          <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entries.length > 0">
-            <li class="app-list" *ngFor="let app of tempAppSearchResults.entries" (keydown.enter)="launchApp(app)">
-                <span class="toolbox">
-                  <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
-                </span>
-                <span (click)="launchApp(app)">
-                  {{app.name}}
-                </span>
-            </li>
-          </ul>
-          <ul class="autocomplete-list" *ngIf="displaySuggestions && tempAppSearchResults.entries.length < 1">
-            <li class="app-list" >
-                <span >
-                  No results found
-                </span>
-            </li>
-          </ul>
-        </div>
-      </div-->
-      <!--div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
-        <div class="search-result">
-          <div *ngIf="displaySuggestions" >
-            <div class="marquee" *ngIf="tempWebSearchResults && tempWebSearchResults.entries && tempWebSearchResults.entries.length > 0">
-              IBM KNOWLEDGE BASE ARTICLES
-            </div>
-            <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entries.length > 0">
-              <li class="url-list" *ngFor="let webRes of tempWebSearchResults.entries" (keydown.enter)="launchApp(app)">
-                <div class="book">
-                  <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
-                </div>
-                <div>
-                  <div class="url-href">
-                    <a href={{webRes.data.href}} target="_blank">{{webRes.title}}</a>
-                  </div>
-                  <div>
-                    {{webRes.summary}}
-                  </div>
-                </div>
-            </li>
-          </ul>
-          <ul #searchResults class="autocomplete-list" *ngIf="tempWebSearchResults.entries.length < 1">
-            <li class="url-list">
-              <span>
-                No results found
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div-->
+      <ng-container *ngFor="let handlerResult of searchHandlerResults">
+        <li *ngIf="handlerResult.entries.length > 0" class="tab-slider--trigger"
+            [class.active]="viewMode == handlerResult.id" rel="handlerResult.id"
+            (click)="viewMode = handlerResult.id">{{handlerResult.shortName}}</li>
+      </ng-container>
+    </ul>
+  </div>
+  <div class="tab-slider--container" [ngSwitch]="viewMode">
 
-          <div class="tab-slider--body" *ngSwitchCase="''">
-            <div class="search-result" *ngIf="displaySuggestions">
+    <div class="tab-slider--body" *ngSwitchCase="''">
+      <div class="search-result" *ngIf="displaySuggestions">
 
         <div *ngFor="let handlerResult of searchHandlerResults">              
-              <div class="marquee">{{handlerResult.longName}}</div>
-              <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
-                
-                <div *ngIf="handlerResult.type == 'web'">
-                  <li class="url-list"  *ngFor="let entry of handlerResult.entries">
-                    <div class="entry-icon">
-                      <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
-                    </div>
-
-                    <div>
-                      <div class="url-href">
-                        <a href={{entry.data.href}} target="_blank">{{entry.title}}</a>
-                      </div>
-                      <div>
-                        {{entry.summary}}
-                      </div>
-                    </div>
-                  </li>
+          <div class="marquee">{{handlerResult.longName}}</div>
+          <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
+            
+            <div *ngIf="handlerResult.type.startsWith('web')">
+              <li class="url-list"  *ngFor="let entry of handlerResult.entries">
+                <div class="entry-icon">
+                  <img src="/ZLUX/plugins/org.zowe.zlux.ng2desktop/web/assets/images/search/book.png">
                 </div>
-                
-                <div *ngIf="handlerResult.type == 'app'">
-                  <li class="url-list" *ngFor="let entry of handlerResult.entries"
-                      (click)="invokeAction(entry)"
-                      (keydown.enter)="invokeAction(entry)">
-                    <div class="entry-icon">
-                      <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
-                    </div>
 
-                    <div>
-                      <div class="url-href"
-                           (click)="invokeAction(entry)"
-                           (keydown.enter)="invokeAction(entry)">{{entry.title}}</div>
-                      <div>
-                        {{entry.summary}}
-                      </div>
-                    </div>
-                  </li>
+                <div>
+                  <div class="url-href" (click)="dismiss()">
+                    <a href={{entry.data.href}} target="_blank">{{entry.title}}</a>
+                  </div>
+                  <div>
+                    {{entry.summary}}
+                  </div>
                 </div>
-                
-              </ul>
-              <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length < 1">
-                <li class="url-list">
-                  <span>
-                    No results found
-                  </span>
-                </li>
-              </ul>
-
-</div>
-              
+              </li>
             </div>
-          </div>
-
-        <div *ngFor="let handlerResult of searchHandlerResults">
-          <div class="tab-slider--body" *ngSwitchCase="handlerResult.id">
-            <div class="search-result" *ngIf="displaySuggestions">
-              <div class="marquee">{{handlerResult.longName}}</div>
-              <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
-
-                <div *ngIf="handlerResult.type.startsWith('web')">
-                  <li class="url-list"  *ngFor="let entry of handlerResult.entries">
-                    <div class="entry-icon">
-                      <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/book.png">
-                    </div>
-
-                    <div>
-                      <div class="url-href">
-                        <a href={{entry.data.href}} target="_blank">{{entry.title}}</a>
-                      </div>
-                      <div>
-                        {{entry.summary}}
-                      </div>
-                    </div>
-                  </li>
+            
+            <div *ngIf="handlerResult.type == 'app'">
+              <li class="url-list" *ngFor="let entry of handlerResult.entries"
+                  (click)="invokeAction(entry)"
+                  (keydown.enter)="invokeAction(entry)">
+                <div class="entry-icon">
+                  <img [src]="entry.imageRef ? entry.imageRef : '/ZLUX/plugins/org.zowe.zlux.ng2desktop/web/assets/images/missing.png'">
                 </div>
-                
-                <div *ngIf="handlerResult.type == 'app'">
-                  <li class="url-list" *ngFor="let entry of handlerResult.entries"
-                      (click)="invokeAction(entry)"
-                      (keydown.enter)="invokeAction(entry)">
-                    <div class="entry-icon">
-                      <img src="/ZLUX/plugins/com.rs.mvd.spotlight/web/assets/toolbox.png">
-                    </div>
 
-                    <div>
-                      <div class="url-href"
-                      (click)="invokeAction(entry)"
-                      (keydown.enter)="invokeAction(entry)">{{entry.title}}</div>
-                      <div>
-                        {{entry.summary}}
-                      </div>
-                    </div>
-                  </li>
+                <div>
+                  <div class="url-href"
+                       (click)="invokeAction(entry)"
+                       (keydown.enter)="invokeAction(entry)">{{entry.title}}</div>
+                  <div>
+                    {{entry.summary}}
+                  </div>
                 </div>
-                
-              </ul>
-              <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length < 1">
-                <li class="url-list">
-                  <span>
-                    No results found
-                  </span>
-                </li>
-              </ul>
+              </li>
             </div>
-          </div>
+            
+          </ul>
+          <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length < 1">
+            <li class="url-list">
+              <span>
+                No results found
+              </span>
+            </li>
+          </ul>
+
         </div>
-      
+        
+      </div>
+    </div>
 
+    <div *ngFor="let handlerResult of searchHandlerResults">
+      <div class="tab-slider--body" *ngSwitchCase="handlerResult.id">
+        <div class="search-result" *ngIf="displaySuggestions">
+          <div class="marquee">{{handlerResult.longName}}</div>
+          <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length > 0">
 
-      
+            <div *ngIf="handlerResult.type.startsWith('web')">
+              <li class="url-list"  *ngFor="let entry of handlerResult.entries">
+                <div class="entry-icon">
+                  <img src="/ZLUX/plugins/org.zowe.zlux.ng2desktop/web/assets/images/search/book.png">
+                </div>
+
+                <div>
+                  <div class="url-href" (click)="dismiss()">
+                    <a href={{entry.data.href}} target="_blank">{{entry.title}}</a>
+                  </div>
+                  <div>
+                    {{entry.summary}}
+                  </div>
+                </div>
+              </li>
+            </div>
+            
+            <div *ngIf="handlerResult.type == 'app'">
+              <li class="url-list" *ngFor="let entry of handlerResult.entries"
+                  (click)="invokeAction(entry)"
+                  (keydown.enter)="invokeAction(entry)">
+                <div class="entry-icon">
+                  <img [src]="entry.imageRef ? entry.imageRef : '/ZLUX/plugins/org.zowe.zlux.ng2desktop/web/assets/images/missing.png'">
+                </div>
+
+                <div>
+                  <div class="url-href"
+                       (click)="invokeAction(entry)"
+                       (keydown.enter)="invokeAction(entry)">{{entry.title}}</div>
+                  <div>
+                    {{entry.summary}}
+                  </div>
+                </div>
+              </li>
+            </div>
+            
+          </ul>
+          <ul #searchResults class="autocomplete-list" *ngIf="handlerResult.entries.length < 1">
+            <li class="url-list">
+              <span>
+                No results found
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
     </div>
 </div>

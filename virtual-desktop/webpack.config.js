@@ -107,7 +107,11 @@ module.exports = {
       {
         from: path.resolve(__dirname, './src/assets/i18n'),
         to: path.resolve('./web/assets/i18n')
-      }
+      },
+      {
+        from: path.resolve(__dirname, './src/assets/images'),
+        to: path.resolve('./web/assets/images')
+      }      
     ])
   ],
   "externals": [

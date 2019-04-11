@@ -28,7 +28,10 @@ export class SearchPanelComponent {
   isActive: boolean = false;
   pluginManager: MVDHosting.PluginManagerInterface;
   public applicationManager: MVDHosting.ApplicationManagerInterface;
-  public displayDescription: boolean = false;
+
+  
+  public displayDescription: boolean = true;
+  public style: any = {};
   
   constructor(
     private elementRef: ElementRef,
@@ -81,6 +84,17 @@ export class SearchPanelComponent {
   }
 
   ngOnInit(): void {
+  }
+
+  focus(): void {
+    this.style['z-index'] = 100;
+  }
+
+  close(): any {
+    const t = this;
+    return function() {
+      t.style['z-index'] = -1;
+    }
   }
 
   activeToggle(): void {

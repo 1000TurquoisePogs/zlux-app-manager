@@ -8,8 +8,8 @@
   Copyright Contributors to the Zowe Project.
 -->
 <div class="launch-widget-popup main-app">
-  <div class="bx--grid bx--row bx--col-xs-12">
-    <org-zowe-search></org-zowe-search>
+  <div class="bx--grid bx--row bx--col-xs-12" [ngStyle]="style" (focusout)="close()">
+    <org-zowe-search [dismissParent]="close()"></org-zowe-search>
     <div class="search-description-section">
       <span class="header-text" *ngIf="displayDescription"> {{searchDescriptor}} </span>
     </div>

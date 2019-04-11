@@ -1,6 +1,6 @@
 // import { AutocompleteService } from '../services/autocomplete.service.ts';
 import { LaunchAppService } from '../services/launch-app.service';
-import { Component, OnInit, ViewChild, ViewChildren, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ViewChildren, Renderer2, ElementRef } from '@angular/core';
 // import { Angular2InjectionTokens } from 'pluginlib/inject-resources';
 
 @Component({
@@ -16,6 +16,7 @@ export class SearchComponent implements OnInit {
   @ViewChildren('searchResults') searchResults: any;
   @ViewChild('searchInput') searchInput: any;
   @ViewChild('searchField') searchField: any;
+  @Input('dismissParent') dismissParent: any;
 
   public inputElement: any;
 
@@ -32,8 +33,6 @@ export class SearchComponent implements OnInit {
   public entityIndex: number = -1;
   public entitySuggestionList: string[] = [];
   public typingDelay: any;
-//  public tempAppSearchResults: MVDHosting.SearchResult|undefined;
-//  public tempWebSearchResults: MVDHosting.SearchResult|undefined;
 
   public searchHandlerResults: MVDHosting.SearchResult[];
   
@@ -50,6 +49,18 @@ export class SearchComponent implements OnInit {
     private launchAppService: LaunchAppService,
     private renderer: Renderer2
   ) {  }
+
+  public dismiss() {
+    this.searchTerm = '';
+    this.errorMessage = '';
+    this.originalSearchTerm = '';
+    this.listElements = null;
+    this.currentTab = 0;
+    this.entityIndex = -1;
+    this.searchHandlerResults = [];
+    this.inputElement.value = '';
+    this.dismissParent();
+  }
   
   public onClick(event:any) {
    if (!this._eref.nativeElement.contains(event.target)) // or some similar check
@@ -112,7 +123,7 @@ export class SearchComponent implements OnInit {
     this.displayPopover = false;
     this.displaySuggestions = false;
     this.checkRegexActive();
-    this.viewMode = "tab1";
+    this.viewMode = "";
     this.loadingQuery = true;
     this.currentTab = undefined;
     const stripQuery:string = "search="+ encodeURI(this.stripRegex());
@@ -249,6 +260,7 @@ export class SearchComponent implements OnInit {
 
   public invokeAction(entry: any): void {
     ZoweZLUX.dispatcher.invokeAction(entry.data.action, entry.data.argData);
+    this.dismiss();
   }
 
   public autocomplete(): void {
