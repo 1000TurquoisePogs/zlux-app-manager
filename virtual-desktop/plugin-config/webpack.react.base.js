@@ -36,8 +36,8 @@ var config = {
         /* Javascript source map loader */
         'enforce': 'pre',
         'test': /\.js$/,
-        'loader': 'source-map-loader',
-        'exclude': [
+        'loader': 'source-map-loader'
+        , 'exclude': [
           /\/node_modules\//
         ]
       },
@@ -69,11 +69,13 @@ var config = {
         /* CSS URL loader, TODO: reconsider */
         'test': /\.css$/,
         'use': [
-          'exports-loader?module.exports.toString()',
+          'style-loader',
           {
             'loader': 'css-loader',
             'options': {
               'sourceMap': false
+              , modules: true,
+              localIdentName: '[name]__[local]'
             }
           }
         ]
@@ -90,7 +92,7 @@ var config = {
   "externals": [
     function(context, request, callback) {
       /* TODO: should we share react? */
-      if (/(@angular)|(^bootstrap$)|(^jquery$)|(^rxjs\/Rx$)/.test(request)){
+      if (/(@angular)|(^jquery$)|(^rxjs\/Rx$)/.test(request)){
         return callback(null, {
           commonjs: request,
           commonjs2: request,

@@ -10,6 +10,7 @@
   Copyright Contributors to the Zowe Project.
 */
 
+
 .desktop-cover {
   position: fixed;
   width: 100%;
@@ -53,10 +54,6 @@
   height: 100%;
   top: 0;
   left: 0;
-}
-
-.login-panel.hidden {
-  display: none;
 }
 
 .login-form {
