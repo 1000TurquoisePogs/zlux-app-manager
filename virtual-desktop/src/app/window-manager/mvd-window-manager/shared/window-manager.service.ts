@@ -70,7 +70,7 @@ export class WindowManagerService implements MVDWindowManagement.WindowManagerSe
   private applicationManager: MVDHosting.ApplicationManagerInterface;
   private viewportManager: MVDHosting.ViewportManagerInterface;
   private pluginManager: MVDHosting.PluginManagerInterface;
-  public screenshotRequestEmitter: Subject<MVDWindowManagement.WindowId>;
+  public screenshotRequestEmitter: Subject<{pluginId: string, windowId: MVDWindowManagement.WindowId}>;
 
   constructor(
     private injector: Injector,
@@ -226,7 +226,7 @@ export class WindowManagerService implements MVDWindowManagement.WindowManagerSe
       restore: () => this.restore(windowId),
       setTitle: (title) => this.setWindowTitle(windowId, title),
       setPosition: (pos) => this.setPosition(windowId, pos),
-      spawnContextMenu: (xRel, yRel, items) => this.spawnContextMenu(windowId, xRel, yRel, items),
+      spawnContextMenu: (xPos, yPos, items, isAbsolutePos?:boolean) => this.spawnContextMenu(windowId, xPos, yPos, items, isAbsolutePos),
       registerCloseHandler: (handler)=> this.registerCloseHandler(windowId, handler)
     };
   }
@@ -472,7 +472,7 @@ export class WindowManagerService implements MVDWindowManagement.WindowManagerSe
     desktopWindow.windowState.zIndex = this.topZIndex ++;
     if (requestScreenshot){
       setTimeout(()=> {
-        this.screenshotRequestEmitter.next(this._lastScreenshotId);
+        this.screenshotRequestEmitter.next({pluginId: desktopWindow.plugin.getIdentifier(), windowId: this._lastScreenshotId});
         this._lastScreenshotId = destination;
       },500); //delay a bit for performance perception
     }
@@ -624,18 +624,21 @@ export class WindowManagerService implements MVDWindowManagement.WindowManagerSe
     }
   }
 
-  spawnContextMenu(windowId: MVDWindowManagement.WindowId, xRelative: number, yRelative: number, items: ContextMenuItem[]): void {
+  spawnContextMenu(windowId: MVDWindowManagement.WindowId, x: number, y: number, items: ContextMenuItem[], isAbsolutePos?: boolean): void {
     const desktopWindow = this.windowMap.get(windowId);
     if (desktopWindow == null) {
       throw new Error('Attempted to spawn context menu for null window');
     }
-
-    const newX = desktopWindow.windowState.position.left + xRelative;
-    const newY = desktopWindow.windowState.position.top + yRelative + WindowManagerService.WINDOW_HEADER_HEIGHT;
-
-    this.contextMenuRequested.next({xPos: newX, yPos: newY, items: items});
+    const windowPos = desktopWindow.windowState.position;
+    const newX = isAbsolutePos ? x : windowPos.left + x;
+    const newY = isAbsolutePos ? y : windowPos.top + y + WindowManagerService.WINDOW_HEADER_HEIGHT;
+    if ((newX >= windowPos.left && newX <= (windowPos.left+windowPos.width))
+         && (newY >= windowPos.top && newY <= (windowPos.top+windowPos.height))) {
+      this.contextMenuRequested.next({xPos: newX, yPos: newY, items: items});    
+    } else {
+      this.logger.warn(`Rejecting context menu due to invalid coord ${newX},${newY} for app at ${windowPos.left},${windowPos.top} w=${windowPos.width}, h=${windowPos.height}`);
+    }
   }
-
 }
 
 
