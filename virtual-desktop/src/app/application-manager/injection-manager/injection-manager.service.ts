@@ -35,7 +35,10 @@ export class InjectionManager {
   // injector above in constructor is injector of the AppManager module
   // generateModuleInjector make root injector augmented with addition providers
 
-  generateModuleInjector(pluginDefinition: MVDHosting.DesktopPluginDefinition, launchMetadata: any, messages?: any): Injector {
+  generateModuleInjector(pluginDefinition: MVDHosting.DesktopPluginDefinition,
+                         launchMetadata: any,
+                         viewportId: MVDHosting.ViewportId,
+                         messages?: any): Injector {
     let identifier = pluginDefinition.getIdentifier();
         
     const l10nPluginConfig: Angular2L10nConfig = {
@@ -65,6 +68,10 @@ export class InjectionManager {
       {
         provide: Angular2InjectionTokens.L10N_CONFIG,
         useValue: l10nPluginConfig
+      },
+      {
+        provide: Angular2InjectionTokens.VIEWPORT_ID,
+        useValue: viewportId
       }
     ], this.injector.get(NgModuleRef).injector);  // gets root injector of virtualDesktop tree
   }

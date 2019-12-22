@@ -22,6 +22,7 @@ export interface ReactMVDResources {
   readonly windowActions: ReactPluginWindowActions | null;
   readonly windowEvents: ReactPluginWindowEvents | null;
   readonly viewportEvents: ReactPluginViewportEvents;
+  readonly viewportId: MVDHosting.ViewportId;
   readonly logger: ZLUX.ComponentLogger;
   readonly pluginDefinition: MVDHosting.DesktopPluginDefinition;
   readonly launchMetadata: any;

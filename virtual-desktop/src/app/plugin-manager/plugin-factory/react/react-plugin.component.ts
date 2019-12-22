@@ -33,6 +33,7 @@ export class ReactPluginComponent implements AfterViewInit, OnDestroy {
     @Optional() @Inject(Angular2InjectionTokens.WINDOW_ACTIONS) windowActions: Angular2PluginWindowActions | null,
     @Optional() @Inject(Angular2InjectionTokens.WINDOW_EVENTS) windowEvents: Angular2PluginWindowEvents | null,
     @Inject(Angular2InjectionTokens.VIEWPORT_EVENTS) viewportEvents: Angular2PluginViewportEvents,
+    @Inject(Angular2InjectionTokens.VIEWPORT_ID) viewportId: MVDHosting.ViewportId,
     @Inject(Angular2InjectionTokens.PLUGIN_DEFINITION) pluginDefinition: MVDHosting.DesktopPluginDefinition,
     @Inject(Angular2InjectionTokens.LOGGER) logger: ZLUX.ComponentLogger,
     @Inject(Angular2InjectionTokens.LAUNCH_METADATA) launchMetadata: any
@@ -42,6 +43,7 @@ export class ReactPluginComponent implements AfterViewInit, OnDestroy {
       windowActions: windowActions,
       windowEvents: windowEvents,
       viewportEvents: viewportEvents,
+      viewportId: viewportId,
       logger: logger,
       pluginDefinition: pluginDefinition,
       launchMetadata: launchMetadata

@@ -172,12 +172,7 @@ export class ApplicationManager implements MVDHosting.ApplicationManagerInterfac
         // so we return as to not repeat the process and create two Viewports for one instance
         return applicationInstance.instanceId;
       }
-      let injector;
-      if (messages) {
-        injector = this.injectionManager.generateModuleInjector(plugin, launchMetadata, messages);
-      } else {
-        injector = this.injectionManager.generateModuleInjector(plugin, launchMetadata);
-      }
+      let injector = this.injectionManager.generateModuleInjector(plugin, launchMetadata, viewportId, messages);
       this.instantiateApplicationInstance(applicationInstance, compiled.moduleFactory, injector);
       this.logger.debug(`appMgr spawning plugin ID=${plugin.getIdentifier()}, `
                         +`compiled.initialComponent=`,compiled.initialComponent);
