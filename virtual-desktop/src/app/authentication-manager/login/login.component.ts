@@ -16,6 +16,7 @@ import { AuthenticationManager,
          LoginExpirationIdleCheckEvent } from '../authentication-manager.service';
 import { TranslationService } from 'angular-l10n';
 //import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ZluxPopupManagerService, ZluxErrorSeverity } from '@zlux/widgets';
 import { BaseLogger } from 'virtual-desktop-logger';
 
@@ -29,7 +30,7 @@ const ACTIVITY_IDLE_TIMEOUT_MS = 300000; //5 minutes
 export class LoginComponent implements OnInit {
   private readonly logger: ZLUX.ComponentLogger = BaseLogger;
   private readonly plugin: any = ZoweZLUX.pluginManager.getDesktopPlugin();
-  logo: string = require('../../../assets/images/login/Zowe_Logo.png');
+  logo: string;//: string = require('../../../assets/images/login/Zowe_Logo.png');
   isLoading:boolean;
   needLogin:boolean;
   locked: boolean;
@@ -44,7 +45,8 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationManager,
     private translation: TranslationService,
     private cdr: ChangeDetectorRef,
-    private popupManager: ZluxPopupManagerService    
+    private popupManager: ZluxPopupManagerService,
+    private http : HttpClient
   ) {
     this.isLoading = true;
     this.needLogin = false;
@@ -52,7 +54,21 @@ export class LoginComponent implements OnInit {
     this.username = '';
     this.password = '';
     this.errorMessage = null;
+    
+    let desktopPlugin:ZLUX.Plugin = ZoweZLUX.pluginManager.getDesktopPlugin();
+    let logoUri = ZoweZLUX.uriBroker.pluginConfigForScopeUri(desktopPlugin, 'instance', 'ui/themebin', 'logo');
+    //let faviconUri = ZoweZLUX.uriBroker.pluginConfigForScopeUri(desktopPlugin, 'instance', 'ui/themebin', 'favicon');
+    this.http.head(logoUri, {observe: 'response'}).subscribe((result:HttpResponse<any>) => {
+      if (result.status != 204 && result.ok) {
+        this.logo = logoUri;
+      }
+    }, error => {
+      //use default logo
+      this.logo = require('../../../assets/images/login/Zowe_Logo.png');
+    });
+    
 
+    
     this.authenticationService.loginScreenVisibilityChanged.subscribe((eventReason: LoginScreenChangeReason) => {
       switch (eventReason) {
       case LoginScreenChangeReason.UserLogout:

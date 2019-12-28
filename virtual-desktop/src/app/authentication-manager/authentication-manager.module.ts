@@ -12,6 +12,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ZluxPopupManagerModule } from '@zlux/widgets';
@@ -23,7 +24,8 @@ import { AuthenticationManager } from './authentication-manager.service';
     CommonModule,
     FormsModule,
     HttpModule,
-    ZluxPopupManagerModule
+    ZluxPopupManagerModule,
+    HttpClientModule
   ],
   declarations: [
     LoginComponent
