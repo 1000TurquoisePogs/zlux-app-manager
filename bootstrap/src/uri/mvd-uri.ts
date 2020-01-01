@@ -11,9 +11,12 @@
 */
 
 import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
+import { RouteManager } from './routes';
 
 const uri_prefix = window.location.pathname.split('ZLUX/plugins/')[0];
 const proxy_mode = (uri_prefix !== '/') ? true : false; // Tells whether we're behind API layer (true) or not (false)
+
+const routeManager = new RouteManager();
 
 export class MvdUri implements ZLUX.UriBroker {
   rasUri(uri: string): string {
@@ -196,6 +199,21 @@ export class MvdUri implements ZLUX.UriBroker {
     return paramUrl;
   }
 
+  setRoute(viewportId: MVDHosting.ViewportId, route: string): string {
+    routeManager.setRoute(viewportId, route);
+    let newHash = `zowe_${viewportId}/${route}`;
+    window.location.hash = '#/'+newHash;
+    return newHash;
+  }
+
+  makeFormattedRoute(viewportId: MVDHosting.ViewportId, route: string): string {
+    let prefix = `zowe_${viewportId}/`;
+    return `${prefix}${route}`;
+  }
+
+  removeRoutes(viewportId: MVDHosting.ViewportId): void {
+    routeManager.removeRoutes(viewportId);
+  }
 }
 
 /*

@@ -10,10 +10,13 @@
   Copyright Contributors to the Zowe Project.
 */
 
-import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager' 
+import { PluginManager } from 'zlux-base/plugin-manager/plugin-manager'
+import { RouteManager } from './routes';
 
 const proxy_path = 'zowe-zlux';
 const proxy_mode = (window.location.pathname.split('/')[1] == proxy_path) ? true : false;
+
+const routeManager = new RouteManager();
 
 export class DsmUri implements ZLUX.UriBroker {
 
@@ -173,6 +176,20 @@ export class DsmUri implements ZLUX.UriBroker {
     return `../dsm/proxy/ZluxProxyServlet`;
   }
 
+  setRoute(viewportId: MVDHosting.ViewportId, route: string): string {
+    routeManager.setRoute(viewportId, route);
+    let newHash = `zowe_${viewportId}/${route}`;
+    window.location.hash = '#/'+newHash;
+    return newHash;
+  }
+
+  makeFormattedRoute(viewportId: MVDHosting.ViewportId, route: string): string {
+    return `zowe_${viewportId}/${route}`;
+  }
+
+  removeRoutes(viewportId: MVDHosting.ViewportId): void {
+    routeManager.removeRoutes(viewportId);
+  }  
 }
 
 /*
